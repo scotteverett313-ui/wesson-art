@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -15,9 +15,18 @@ interface LightboxProps {
 }
 
 export default function Lightbox({ artwork, onClose, artworks, onNavigate }: LightboxProps) {
+  const [slideIndex, setSlideIndex] = useState(0);
+
   const currentIndex = artwork ? artworks.findIndex((a) => a.id === artwork.id) : -1;
   const hasPrev = currentIndex > 0;
   const hasNext = currentIndex < artworks.length - 1;
+
+  const slides = artwork?.images?.length ? artwork.images : artwork ? [artwork.image] : [];
+  const hasMultipleSlides = slides.length > 1;
+
+  useEffect(() => {
+    setSlideIndex(0);
+  }, [artwork?.id]);
 
   const handlePrev = useCallback(() => {
     if (hasPrev) onNavigate(artworks[currentIndex - 1]);
@@ -62,22 +71,22 @@ export default function Lightbox({ artwork, onClose, artworks, onNavigate }: Lig
             <X size={22} />
           </button>
 
-          {/* Prev */}
+          {/* Artwork prev */}
           {hasPrev && (
             <button
               onClick={(e) => { e.stopPropagation(); handlePrev(); }}
-              className="absolute left-4 md:left-8 text-white/50 hover:text-white transition-colors z-10"
+              className="hidden md:block absolute left-8 top-1/2 -translate-y-1/2 text-white/50 hover:text-white transition-colors z-10"
               aria-label="Previous artwork"
             >
               <ChevronLeft size={28} />
             </button>
           )}
 
-          {/* Next */}
+          {/* Artwork next */}
           {hasNext && (
             <button
               onClick={(e) => { e.stopPropagation(); handleNext(); }}
-              className="absolute right-4 md:right-8 text-white/50 hover:text-white transition-colors z-10"
+              className="hidden md:block absolute right-8 top-1/2 -translate-y-1/2 text-white/50 hover:text-white transition-colors z-10"
               aria-label="Next artwork"
             >
               <ChevronRight size={28} />
@@ -94,17 +103,65 @@ export default function Lightbox({ artwork, onClose, artworks, onNavigate }: Lig
             className="flex flex-col md:flex-row items-center gap-8 max-w-6xl w-full"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Image */}
-            <div className="relative w-full md:flex-1 aspect-[4/5] max-h-[70vh]">
-              <Image
-                src={artwork.image}
-                alt={`${artwork.title}, ${artwork.year}, ${artwork.medium}`}
-                fill
-                sizes="(max-width: 768px) 100vw, 60vw"
-                className="object-contain"
-                placeholder="blur"
-                blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8/OFDPQAIgQM/8l5TSAAAAABJRU5ErkJggg=="
-              />
+            {/* Image + slideshow controls */}
+            <div className="w-full md:flex-1 flex flex-col gap-3">
+              <div className="relative w-full aspect-[4/5] max-h-[70vh] group">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={slides[slideIndex]}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute inset-0"
+                  >
+                    <Image
+                      src={slides[slideIndex]}
+                      alt={`${artwork.title} – ${slideIndex + 1} of ${slides.length}`}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 60vw"
+                      className="object-contain"
+                      placeholder="blur"
+                      blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8/OFDPQAIgQM/8l5TSAAAAABJRU5ErkJggg=="
+                    />
+                  </motion.div>
+                </AnimatePresence>
+
+                {hasMultipleSlides && (
+                  <>
+                    <button
+                      onClick={() => setSlideIndex((i) => (i > 0 ? i - 1 : slides.length - 1))}
+                      className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white rounded-full p-1.5 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity z-10"
+                      aria-label="Previous image"
+                    >
+                      <ChevronLeft size={16} />
+                    </button>
+                    <button
+                      onClick={() => setSlideIndex((i) => (i < slides.length - 1 ? i + 1 : 0))}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white rounded-full p-1.5 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity z-10"
+                      aria-label="Next image"
+                    >
+                      <ChevronRight size={16} />
+                    </button>
+                  </>
+                )}
+              </div>
+
+              {/* Dot indicators */}
+              {hasMultipleSlides && (
+                <div className="flex justify-center gap-2">
+                  {slides.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setSlideIndex(i)}
+                      className={`w-1.5 h-1.5 rounded-full transition-all ${
+                        i === slideIndex ? "bg-white scale-125" : "bg-white/30 hover:bg-white/60"
+                      }`}
+                      aria-label={`Image ${i + 1}`}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Metadata */}
@@ -141,7 +198,7 @@ export default function Lightbox({ artwork, onClose, artworks, onNavigate }: Lig
             </div>
           </motion.div>
 
-          {/* Counter */}
+          {/* Artwork counter */}
           <p className="absolute bottom-5 left-1/2 -translate-x-1/2 text-xs text-white/30 tracking-widest">
             {currentIndex + 1} / {artworks.length}
           </p>

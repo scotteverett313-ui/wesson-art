@@ -7,6 +7,7 @@ export interface Artwork {
   dimensions: string;
   description: string;
   image: string;
+  images?: string[];
   featured: boolean;
   series: string;
 }

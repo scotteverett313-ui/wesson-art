@@ -1,0 +1,74 @@
+[
+  {
+    "id": "1",
+    "slug": "How-I-built-this",
+    "title": "How I built this",
+    "year": "2022 - 2025",
+    "medium": "Digital Art",
+    "dimensions": "4000 × 3000 px",
+    "description": "A vibrant scene capturing the energy of musical storytelling across generations. Bold color and expressive figure work animate the sense of collective memory.",
+    "image": "/images/placeholder-1.jpg",
+    "featured": true,
+    "series": "Portraiture"
+  },
+  {
+    "id": "2",
+    "slug": "John-Templeton-Prize",
+    "title": "John Templeton Prize",
+    "year": "2022- 2025",
+    "medium": "Illustration",
+    "dimensions": "4000 × 3000 px",
+    "description": "Two figures hold their ground at the intersection of identity and cultural friction. The tension between subjects dissolves into an explosion of abstract geometry.",
+    "image": "/images/placeholder-2.jpg",
+    "featured": true,
+    "series": "Portraiture"
+  },
+  {
+    "id": "3",
+    "slug": "AADL-Mural",
+    "title": "AADL Mural",
+    "year": "2025",
+    "medium": "Portrait",
+    "dimensions": "3000 × 4000 px",
+    "description": "A portrait rendered in warmth — the subject radiates presence against a fragmented, celebratory backdrop. Joy as resistance.",
+    "image": "/images/placeholder-3.jpg",
+    "featured": false,
+    "series": "Portraiture"
+  },
+  {
+    "id": "4",
+    "slug": "Editorial",
+    "title": "Editorial",
+    "year": "Various",
+    "medium": "Illustration",
+    "dimensions": "4000 × 3000 px",
+    "description": "A sea of red in motion through city streets. The crowd becomes texture, the individual disappears — and somehow becomes more visible.",
+    "image": "/images/placeholder-4.jpg",
+    "featured": true,
+    "series": "Illustration"
+  },
+  {
+    "id": "5",
+    "slug": "Sketchbook",
+    "title": "Sketchbook",
+    "year": "Various",
+    "medium": "Digital Art",
+    "dimensions": "4000 × 3000 px",
+    "description": "Hypnotic spiral forms in deep fuchsia — an exercise in visual obsession. The eye moves inward and finds no exit.",
+    "image": "/images/placeholder-5.jpg",
+    "featured": false,
+    "series": "Illustration"
+  },
+  {
+    "id": "6",
+    "slug": "Rappers",
+    "title": "Rappers",
+    "year": "2023",
+    "medium": "Illustration",
+    "dimensions": "4000 × 3000 px",
+    "description": "Absurdist characters rendered in saturated flatness. The grotesque becomes familiar; the playful carries weight.",
+    "image": "/images/placeholder-6.jpg",
+    "featured": false,
+    "series": "Portraiture"
+  }
+]

@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
+import siteData from "@/content/site.json";
 
 export const metadata: Metadata = {
   title: "About",
   description: "Biography, exhibition history, and CV for Wesson Art.",
 };
+
+const { about } = siteData;
 
 const exhibitions = [
   {
@@ -41,17 +44,13 @@ export default function AboutPage() {
           </div>
 
           <h1 className="font-[family-name:var(--font-anton)] text-[clamp(2.5rem,7vw,5rem)] leading-none tracking-widest uppercase text-white mb-6">
-            Wesson
+            {about.name}
           </h1>
 
           <div className="space-y-4 text-sm text-white/50 leading-relaxed">
-            <p>Born [Year], [City, Country]. Lives and works in [City, Country].</p>
-            <p>
-              Placeholder biography text. Describe the artist's practice, influences, and conceptual concerns. Bold, culturally rooted digital work that blends portraiture, street observation, and character illustration.
-            </p>
-            <p>
-              Further context — educational background, residencies, pivotal projects, and the cultural currents that run through the work.
-            </p>
+            <p>{about.bio1}</p>
+            <p>{about.bio2}</p>
+            <p>{about.bio3}</p>
           </div>
         </div>
 

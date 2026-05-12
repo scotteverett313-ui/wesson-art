@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import { Send } from "lucide-react";
+import siteData from "@/content/site.json";
 
 export default function ContactPage() {
+  const { contact } = siteData;
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
 
@@ -26,7 +28,7 @@ export default function ContactPage() {
           Contact
         </h1>
         <p className="text-sm text-white/40 leading-relaxed mb-12">
-          For commissions, exhibition inquiries, press, or general correspondence.
+          {contact.intro}
         </p>
 
         {status === "sent" ? (

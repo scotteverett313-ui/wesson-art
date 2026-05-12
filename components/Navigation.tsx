@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import siteData from "@/content/site.json";
 
 const navLinks = [
   { href: "/", label: "Work" },
@@ -15,6 +16,7 @@ const navLinks = [
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
+  const { nav } = siteData;
 
   useEffect(() => {
     setIsOpen(false);
@@ -24,24 +26,19 @@ export default function Navigation() {
     <>
       <header className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-sm border-b border-white/10">
         <nav className="max-w-screen-xl mx-auto px-4 sm:px-6 h-12 flex items-center justify-between">
-          {/* Wordmark */}
           <Link
             href="/"
             className="font-[family-name:var(--font-anton)] text-xl tracking-widest text-white hover:opacity-70 transition-opacity uppercase"
           >
-            WessonArt
+            {nav.wordmark}
           </Link>
-
-          {/* Desktop nav */}
           <ul className="hidden md:flex items-center gap-8">
             {navLinks.map(({ href, label }) => (
               <li key={href}>
                 <Link
                   href={href}
                   className={`text-xs tracking-[0.2em] uppercase font-medium transition-colors ${
-                    pathname === href
-                      ? "text-white"
-                      : "text-white/50 hover:text-white"
+                    pathname === href ? "text-white" : "text-white/50 hover:text-white"
                   }`}
                 >
                   {label}
@@ -49,8 +46,6 @@ export default function Navigation() {
               </li>
             ))}
           </ul>
-
-          {/* Mobile menu button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="md:hidden p-1 text-white/70 hover:text-white transition-colors"
@@ -61,7 +56,6 @@ export default function Navigation() {
         </nav>
       </header>
 
-      {/* Mobile overlay */}
       <AnimatePresence>
         {isOpen && (
           <motion.div

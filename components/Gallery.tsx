@@ -15,7 +15,7 @@ export default function Gallery({ artworks }: GalleryProps) {
   return (
     <>
       <section className="w-full max-w-screen-xl mx-auto px-4 sm:px-6 pt-4 pb-20">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-6 gap-y-0">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-4">
           {artworks.map((artwork, index) => (
             <ArtworkCard
               key={artwork.id}

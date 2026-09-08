@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useCallback, useState } from "react";
+import { useEffect, useCallback, useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -16,6 +16,7 @@ interface LightboxProps {
 
 export default function Lightbox({ artwork, onClose, artworks, onNavigate }: LightboxProps) {
   const [slideIndex, setSlideIndex] = useState(0);
+  const touchStartX = useRef<number | null>(null);
 
   const currentIndex = artwork ? artworks.findIndex((a) => a.id === artwork.id) : -1;
   const hasPrev = currentIndex > 0;
@@ -105,7 +106,18 @@ export default function Lightbox({ artwork, onClose, artworks, onNavigate }: Lig
           >
             {/* Image + slideshow controls */}
             <div className="w-full md:flex-1 flex flex-col gap-3">
-              <div className="relative w-full aspect-[4/5] max-h-[70vh] group">
+              <div
+                className="relative w-full aspect-[4/5] max-h-[70vh] group"
+                onTouchStart={(e) => { touchStartX.current = e.touches[0].clientX; }}
+                onTouchEnd={(e) => {
+                  if (touchStartX.current === null) return;
+                  const delta = e.changedTouches[0].clientX - touchStartX.current;
+                  touchStartX.current = null;
+                  if (Math.abs(delta) < 40) return;
+                  if (delta < 0) setSlideIndex((i) => (i < slides.length - 1 ? i + 1 : 0));
+                  else setSlideIndex((i) => (i > 0 ? i - 1 : slides.length - 1));
+                }}
+              >
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={slides[slideIndex]}

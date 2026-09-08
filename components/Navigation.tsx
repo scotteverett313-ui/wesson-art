@@ -1,10 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react";
 import siteData from "@/content/site.json";
 
 const navLinks = [
@@ -14,24 +12,27 @@ const navLinks = [
 ];
 
 export default function Navigation() {
-  const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const { nav } = siteData;
 
+  // Prevent content from hiding behind bottom nav on mobile
   useEffect(() => {
-    setIsOpen(false);
-  }, [pathname]);
+    document.body.style.paddingBottom = "";
+  }, []);
 
   return (
     <>
+      {/* Top header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-sm border-b border-white/10">
-        <nav className="max-w-screen-xl mx-auto px-4 sm:px-6 h-12 flex items-center justify-between">
+        <div className="max-w-screen-xl mx-auto px-4 sm:px-6 h-12 flex items-center justify-between">
           <Link
             href="/"
             className="font-[family-name:var(--font-anton)] text-xl tracking-widest text-white hover:opacity-70 transition-opacity uppercase"
           >
             {nav.wordmark}
           </Link>
+
+          {/* Desktop nav links */}
           <ul className="hidden md:flex items-center gap-8">
             {navLinks.map(({ href, label }) => (
               <li key={href}>
@@ -46,47 +47,31 @@ export default function Navigation() {
               </li>
             ))}
           </ul>
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-1 text-white/70 hover:text-white transition-colors"
-            aria-label={isOpen ? "Close menu" : "Open menu"}
-          >
-            {isOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
-        </nav>
+        </div>
       </header>
 
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-40 bg-black flex flex-col items-center justify-center"
-          >
-            <ul className="flex flex-col items-center gap-10">
-              {navLinks.map(({ href, label }, i) => (
-                <motion.li
-                  key={href}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.07 }}
-                >
-                  <Link
-                    href={href}
-                    className={`font-[family-name:var(--font-anton)] text-5xl tracking-widest uppercase transition-colors ${
-                      pathname === href ? "text-white" : "text-white/40 hover:text-white"
-                    }`}
-                  >
-                    {label}
-                  </Link>
-                </motion.li>
-              ))}
-            </ul>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Mobile bottom nav */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-sm border-t border-white/10">
+        <ul className="flex items-center justify-around h-16">
+          {navLinks.map(({ href, label }) => (
+            <li key={href} className="flex-1">
+              <Link
+                href={href}
+                className={`flex flex-col items-center justify-center h-16 gap-0.5 text-[10px] tracking-[0.2em] uppercase transition-colors ${
+                  pathname === href ? "text-white" : "text-white/40 hover:text-white"
+                }`}
+              >
+                <span
+                  className={`w-1 h-1 rounded-full mb-0.5 ${
+                    pathname === href ? "bg-white" : "bg-transparent"
+                  }`}
+                />
+                {label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
     </>
   );
 }

@@ -40,8 +40,8 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${anton.variable}`}>
       <body className="flex flex-col min-h-screen bg-black text-white">
         <Navigation />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <main className="flex-1 pb-16 md:pb-0">{children}</main>
+        <div className="hidden md:block"><Footer /></div>
       </body>
     </html>
   );

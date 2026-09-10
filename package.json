@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test:engine": "node --experimental-strip-types --test lib/vaultmark/engine.test.mts"
+    "test": "node --experimental-strip-types --test lib/vaultmark/*.test.mts"
   },
   "dependencies": {
     "framer-motion": "^11.18.2",

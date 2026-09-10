@@ -1,10 +1,9 @@
 import ScaffoldNotice from "@/components/vaultmark/internal/ScaffoldNotice";
-import type { VaultKeyCredential } from "@/lib/vaultmark/types";
+import type { VerifyResult } from "@/lib/vaultmark/engine";
 
 interface VerifyPanelProps {
   onVerify?: (image: File, key: string) => Promise<void>;
-  result?: { pass: boolean; detail: string } | null;
-  keyCredential?: VaultKeyCredential;
+  result?: VerifyResult | null;
 }
 
 export default function VerifyPanel(_props: VerifyPanelProps) {

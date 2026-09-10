@@ -4,25 +4,20 @@ export type PieceStatus = "Vaulted" | "Listed" | "Sold" | "On Loan";
 
 export type QRSymbolId = "VM-A" | "VM-B" | "VM-C" | "VM-D";
 
-export interface KeyTileRecord {
-  dest: number;
-  src: number;
-  checksum: string;
-}
-
+// The issued .vmk credential: enough to reconstruct the QR mask and the
+// exact region of the original image it was drawn over, so a candidate
+// image can be re-checked against it without Vaultmark storing anything.
 export interface VaultKeyCredential {
   version: string;
-  seed: number;
-  grid: number;
-  keyCount: number;
-  imageSize: number;
-  tileSize: number;
-  vaultFingerprint: string;
-  mapChecksum: string;
-  keyTiles: KeyTileRecord[];
+  vaultId: string;
   qrSymbol: QRSymbolId;
-  edition?: number;
-  totalEditions?: number;
+  regionX: number;
+  regionY: number;
+  zoomLevel: number;
+  qrSize: number;
+  maskedCount: number;
+  pixelHash: string;
+  vaultFingerprint: string;
   issuedAt: string;
 }
 
@@ -43,6 +38,7 @@ export interface VaultPiece {
   qrSymbol: QRSymbolId;
   maskedPixelCount: number;
   imageFingerprint: string;
+  pixelHash: string;
   vaultedAt: string;
   key: string;
   thumbColors: { bg: string; fg: string };

@@ -22,6 +22,7 @@ function makePiece(overrides: Partial<VaultPiece> = {}): VaultPiece {
     maskedPixelCount: 241,
     imageFingerprint: "a".repeat(64),
     pixelHash: "b".repeat(64),
+    captureSource: "upload",
     vaultedAt: "2026-01-01T00:00:00.000Z",
     key: "encoded-key",
     thumbColors: { bg: "#1A2E4A", fg: "#4A8ABB" },

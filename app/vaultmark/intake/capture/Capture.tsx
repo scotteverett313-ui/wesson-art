@@ -1,10 +1,10 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession } from "@/components/vaultmark/SessionContext";
-import { useIntake } from "@/components/vaultmark/IntakeContext";
+import { useIntake, type CaptureSource } from "@/components/vaultmark/IntakeContext";
 import { useToast } from "@/components/vaultmark/Toast";
 import { sha256Hex } from "@/lib/vaultmark/engine";
 
@@ -15,12 +15,13 @@ const ACCEPTED = ".png,.tiff,.tif,.bmp,image/png,image/tiff,image/bmp";
 type CheckState = "idle" | "running" | "pass" | "fail";
 
 interface Check {
+  label: string;
   state: CheckState;
   detail: string;
 }
 
 const CHECK_LABELS = ["Format", "Resolution", "Lossless", "Fingerprint"];
-const IDLE_CHECKS: Check[] = CHECK_LABELS.map(() => ({ state: "idle", detail: "Awaiting image" }));
+const IDLE_CHECKS: Check[] = CHECK_LABELS.map((label) => ({ label, state: "idle", detail: "Awaiting image" }));
 
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -31,9 +32,17 @@ export default function Capture() {
   const { showToast } = useToast();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
   const [checks, setChecks] = useState<Check[]>(IDLE_CHECKS);
   const [dragging, setDragging] = useState(false);
   const [scanning, setScanning] = useState(false);
+  // Only offer the camera where there plausibly is one; the capture attribute
+  // is inert on desktop and would just open a second file browser.
+  const [hasCamera, setHasCamera] = useState(false);
+
+  useEffect(() => {
+    setHasCamera(window.matchMedia("(pointer: coarse)").matches);
+  }, []);
 
   const allPassed = checks.every((c) => c.state === "pass");
 
@@ -42,18 +51,18 @@ export default function Capture() {
   }, []);
 
   const handleFile = useCallback(
-    async (file: File) => {
+    async (file: File, source: CaptureSource = "upload") => {
       setScanning(true);
       setCaptured(null);
-      setChecks(IDLE_CHECKS.map(() => ({ state: "idle", detail: "Queued" })));
+      setChecks(CHECK_LABELS.map((label) => ({ label, state: "idle", detail: "Queued" })));
 
       // Each check is revealed in sequence so the panel reads as a scan
       // rather than a form that fills itself in all at once.
-      const runCheck = async (index: number, run: () => Check | Promise<Check>) => {
-        updateCheck(index, { state: "running", detail: "Checking…" });
+      const runCheck = async (index: number, run: () => Omit<Check, "label"> | Promise<Omit<Check, "label">>, label = CHECK_LABELS[index]) => {
+        updateCheck(index, { label, state: "running", detail: "Checking…" });
         await wait(280);
         const result = await run();
-        updateCheck(index, result);
+        updateCheck(index, { label, ...result });
         return result;
       };
 
@@ -61,9 +70,14 @@ export default function Capture() {
 
       const format = await runCheck(0, () => {
         const isJpeg = file.type === "image/jpeg" || /\.jpe?g$/i.test(file.name);
-        return isJpeg
-          ? { state: "fail" as const, detail: "JPEG rejected — lossy compression breaks pixel checksums" }
-          : { state: "pass" as const, detail: `${extension} accepted` };
+        if (!isJpeg) return { state: "pass" as const, detail: `${extension} accepted` };
+        // Camera capture is the sanctioned exception: phones and tablets only
+        // ever hand back JPEG, and the fingerprint is taken from decoded pixels
+        // rather than file bytes, so it is still stable. The record carries the
+        // flag so a lossy master is never mistaken for a lossless one.
+        return source === "camera"
+          ? { state: "pass" as const, detail: "JPEG accepted — camera capture, flagged in record" }
+          : { state: "fail" as const, detail: "JPEG rejected — lossy compression breaks pixel checksums" };
       });
       if (format.state === "fail") {
         setScanning(false);
@@ -77,7 +91,7 @@ export default function Capture() {
         image = await loadImage(objectUrl);
       } catch {
         URL.revokeObjectURL(objectUrl);
-        updateCheck(1, { state: "fail", detail: "File could not be decoded as an image" });
+        updateCheck(1, { label: CHECK_LABELS[1], state: "fail", detail: "File could not be decoded as an image" });
         setScanning(false);
         showToast("That file could not be read as an image");
         return;
@@ -100,7 +114,14 @@ export default function Capture() {
         return;
       }
 
-      await runCheck(2, () => ({ state: "pass", detail: `Lossless ${extension} confirmed` }));
+      await runCheck(
+        2,
+        () =>
+          source === "camera"
+            ? { state: "pass" as const, detail: "Lossy camera master — recorded as camera-sourced" }
+            : { state: "pass" as const, detail: `Lossless ${extension} confirmed` },
+        source === "camera" ? "Source" : "Lossless",
+      );
 
       const canvas = document.createElement("canvas");
       canvas.width = size;
@@ -108,7 +129,7 @@ export default function Capture() {
       const ctx = canvas.getContext("2d");
       if (!ctx) {
         URL.revokeObjectURL(objectUrl);
-        updateCheck(3, { state: "fail", detail: "Canvas unavailable in this browser" });
+        updateCheck(3, { label: CHECK_LABELS[3], state: "fail", detail: "Canvas unavailable in this browser" });
         setScanning(false);
         return;
       }
@@ -134,6 +155,7 @@ export default function Capture() {
         fingerprint,
         fileName: file.name,
         format: extension,
+        source,
         previewUrl: canvas.toDataURL("image/png"),
         sourceWidth: image.naturalWidth,
         sourceHeight: image.naturalHeight,
@@ -211,11 +233,38 @@ export default function Capture() {
               className="hidden"
               onChange={(e) => {
                 const file = e.target.files?.[0];
-                if (file) void handleFile(file);
+                if (file) void handleFile(file, "upload");
                 e.target.value = "";
               }}
             />
           </div>
+
+          {hasCamera && (
+            <>
+              <button
+                type="button"
+                onClick={() => cameraInputRef.current?.click()}
+                className="mt-2 w-full border border-vm-border-2 px-4 py-2.5 font-vm-mono text-[10px] uppercase tracking-[0.12em] text-vm-mid transition-colors hover:border-vm-gold hover:text-vm-gold"
+              >
+                Photograph the work
+              </button>
+              <p className="mt-1.5 text-[8px] leading-[1.7] text-vm-dim">
+                Cameras produce JPEG. Accepted, and flagged in the vault record as a lossy master.
+              </p>
+              <input
+                ref={cameraInputRef}
+                type="file"
+                accept="image/*"
+                capture="environment"
+                className="hidden"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) void handleFile(file, "camera");
+                  e.target.value = "";
+                }}
+              />
+            </>
+          )}
 
           <button
             type="button"
@@ -231,7 +280,7 @@ export default function Capture() {
           <div className="mb-3 text-[9px] uppercase tracking-[0.15em] text-vm-dim">Quality checks</div>
           <div className="grid grid-cols-2 gap-px bg-vm-border">
             {checks.map((check, i) => (
-              <div key={CHECK_LABELS[i]} className="bg-vm-surface p-2.5">
+              <div key={CHECK_LABELS[i]} className="bg-vm-surface p-2.5" data-check={CHECK_LABELS[i]}>
                 <div className="flex items-center gap-2">
                   <span
                     className={`text-[11px] leading-none ${
@@ -251,7 +300,7 @@ export default function Capture() {
                       check.state === "pass" ? "text-vm-green" : check.state === "fail" ? "text-vm-red" : "text-vm-mid"
                     }`}
                   >
-                    {CHECK_LABELS[i]}
+                    {check.label}
                   </span>
                 </div>
                 <div className="mt-1 text-[8px] leading-[1.6] text-vm-dim">{check.detail}</div>
@@ -289,6 +338,13 @@ export default function Capture() {
                   <Field label="Source size" value={`${captured.sourceWidth} × ${captured.sourceHeight} px`} />
                   <Field label="Vaulted size" value={`${captured.size} × ${captured.size} px`} />
                 </dl>
+                {captured.source === "camera" && (
+                  <div className="mt-2 border border-vm-amber/40 bg-vm-surface px-3 py-2">
+                    <span className="text-[9px] leading-[1.7] text-vm-amber">
+                      Camera capture · lossy master — recorded on the vault record
+                    </span>
+                  </div>
+                )}
                 <p className="mt-2 text-[9px] leading-[1.7] text-vm-dim">
                   Centre-cropped to a square so the vault region samples undistorted artwork pixels.
                 </p>

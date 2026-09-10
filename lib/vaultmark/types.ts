@@ -39,6 +39,9 @@ export interface VaultPiece {
   maskedPixelCount: number;
   imageFingerprint: string;
   pixelHash: string;
+  // "camera" marks a lossy master photographed at intake rather than an
+  // uploaded lossless file — it travels with the record and the certificate.
+  captureSource: "upload" | "camera";
   vaultedAt: string;
   key: string;
   thumbColors: { bg: string; fg: string };

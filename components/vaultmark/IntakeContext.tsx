@@ -1,6 +1,14 @@
 "use client";
 
 import { createContext, useCallback, useContext, useMemo, useState } from "react";
+import type { VaultKeyCredential } from "@/lib/vaultmark/types";
+
+export type CaptureSource = "upload" | "camera";
+
+export interface VaultDraft {
+  key: VaultKeyCredential;
+  encodedKey: string;
+}
 
 export interface CapturedImage {
   pixels: ImageData;
@@ -8,6 +16,7 @@ export interface CapturedImage {
   fingerprint: string;
   fileName: string;
   format: string;
+  source: CaptureSource;
   previewUrl: string;
   sourceWidth: number;
   sourceHeight: number;
@@ -16,6 +25,8 @@ export interface CapturedImage {
 interface IntakeContextValue {
   captured: CapturedImage | null;
   setCaptured: (image: CapturedImage | null) => void;
+  vault: VaultDraft | null;
+  setVault: (draft: VaultDraft | null) => void;
   resetIntake: () => void;
 }
 
@@ -27,12 +38,16 @@ const IntakeContext = createContext<IntakeContextValue | null>(null);
 // the duration of one intake. Leaving /vaultmark/intake drops it.
 export function IntakeProvider({ children }: { children: React.ReactNode }) {
   const [captured, setCaptured] = useState<CapturedImage | null>(null);
+  const [vault, setVault] = useState<VaultDraft | null>(null);
 
-  const resetIntake = useCallback(() => setCaptured(null), []);
+  const resetIntake = useCallback(() => {
+    setCaptured(null);
+    setVault(null);
+  }, []);
 
   const value = useMemo<IntakeContextValue>(
-    () => ({ captured, setCaptured, resetIntake }),
-    [captured, resetIntake],
+    () => ({ captured, setCaptured, vault, setVault, resetIntake }),
+    [captured, vault, resetIntake],
   );
 
   return <IntakeContext.Provider value={value}>{children}</IntakeContext.Provider>;

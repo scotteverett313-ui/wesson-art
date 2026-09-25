@@ -66,7 +66,9 @@
       "/images/editorial-1.jpg",
       "/images/editorial-2.jpg",
       "/images/editorial-3.jpg",
-      "/images/editorial-4.jpg"
+      "/images/editorial-4.jpg",
+      "/images/editorial-5.jpg",
+      "/images/editorial-6.jpg"
     ],
     "featured": true,
     "series": "Illustration"
@@ -84,7 +86,9 @@
       "/images/sketchbook-1.jpg",
       "/images/sketchbook-2.jpg",
       "/images/sketchbook-3.jpg",
-      "/images/sketchbook-4.jpg"
+      "/images/sketchbook-4.jpg",
+      "/images/sketchbook-5.jpg",
+      "/images/sketchbook-6.jpg"
     ],
     "featured": false,
     "series": "Illustration"

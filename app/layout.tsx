@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Anton } from "next/font/google";
 import "./globals.css";
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
+import AppChrome from "@/components/AppChrome";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -39,9 +38,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${anton.variable}`}>
       <body className="flex flex-col min-h-screen bg-black text-white">
-        <Navigation />
-        <main className="flex-1 pb-16 md:pb-0">{children}</main>
-        <div className="hidden md:block"><Footer /></div>
+        <AppChrome>{children}</AppChrome>
       </body>
     </html>
   );

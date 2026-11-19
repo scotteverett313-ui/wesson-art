@@ -1,0 +1,856 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kova House DJ</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Kova is a Detroit house DJ. Upcoming dates, past sets, mixes, SoundCloud and booking.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;900&family=DM+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap">
+<style>
+/* Layout: left-aligned flyer grid, sticky top bar with a permanent Book button, a ticker strip under the hero, two-column sections that stack on phones. */
+:root {
+  --bg: #100d1a;
+  --bg-2: #171225;
+  --surface: #1d1730;
+  --line: #2f2745;
+  --fg: #f3eee6;
+  --muted: #a39bb5;
+  --accent: #ff8b3d;
+  --accent-ink: #1a0d04;
+  --glow: #8b6cff;
+  --glow-soft: rgba(139,108,255,.22);
+  --ok: #7fd3a1;
+  --font-display: "Unbounded", "Arial Black", Impact, sans-serif;
+  --font-body: "DM Sans", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "Space Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #f6f2ec; --bg-2: #efe9e0; --surface: #ffffff; --line: #ddd3c6;
+    --fg: #17121f; --muted: #675d78; --accent: #e8651c; --accent-ink: #fff6ee;
+    --glow: #5a3fe0; --glow-soft: rgba(90,63,224,.16); --ok: #1f8a4d;
+    color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --bg: #f6f2ec; --bg-2: #efe9e0; --surface: #ffffff; --line: #ddd3c6;
+  --fg: #17121f; --muted: #675d78; --accent: #e8651c; --accent-ink: #fff6ee;
+  --glow: #5a3fe0; --glow-soft: rgba(90,63,224,.16); --ok: #1f8a4d;
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--bg); color: var(--fg);
+  font-family: var(--font-body); font-size: 16px; line-height: 1.55;
+  -webkit-font-smoothing: antialiased; overflow-x: hidden;
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } }
+a { color: inherit; }
+img { max-width: 100%; display: block; }
+h1, h2, h3 { font-family: var(--font-display); line-height: 1.02; margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
+h2 { font-size: clamp(1.9rem, 4.5vw, 3.2rem); font-weight: 700; }
+h3 { font-size: 1.05rem; font-weight: 700; }
+p { margin: 0; }
+.wrap { max-width: 1180px; margin-inline: auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.eyebrow { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .18em; text-transform: uppercase; color: var(--accent); }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.muted { color: var(--muted); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* Buttons */
+.btn { display: inline-flex; align-items: center; gap: .5rem; padding: .8rem 1.25rem; border-radius: 999px; border: 1px solid var(--line); background: transparent; color: var(--fg); font: 600 .9rem var(--font-body); text-decoration: none; cursor: pointer; transition: background .15s, border-color .15s, transform .15s; }
+.btn:hover { border-color: var(--fg); }
+.btn:active { transform: translateY(1px); }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.btn.primary:hover { filter: brightness(1.08); }
+.btn.small { padding: .5rem .9rem; font-size: .8rem; }
+.btn svg { width: 1em; height: 1em; }
+
+/* Top bar */
+.topbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: color-mix(in srgb, var(--bg) 86%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+.topbar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 1rem; height: 64px; }
+.wordmark { font-family: var(--font-display); font-weight: 900; font-size: 1.05rem; letter-spacing: .06em; text-transform: uppercase; text-decoration: none; display: flex; align-items: center; gap: .6rem; }
+.wordmark i { width: 12px; height: 12px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px var(--glow-soft); }
+.navlinks { display: flex; gap: 1.6rem; list-style: none; margin: 0; padding: 0; }
+.navlinks a { text-decoration: none; font-size: .85rem; font-weight: 500; color: var(--muted); }
+.navlinks a:hover { color: var(--fg); }
+.menu-btn { display: none; }
+@media (max-width: 760px) {
+  .navlinks { display: none; position: absolute; top: 64px; left: 0; right: 0; flex-direction: column; gap: 0; background: var(--bg-2); border-bottom: 1px solid var(--line); padding: .5rem max(16px, env(safe-area-inset-left, 0px)) 1rem; }
+  .navlinks.open { display: flex; }
+  .navlinks a { display: block; padding: .8rem 0; border-bottom: 1px solid var(--line); font-size: 1rem; }
+  .menu-btn { display: inline-flex; }
+}
+
+/* Hero */
+.hero { padding-block: clamp(2.5rem, 7vw, 5.5rem) clamp(2rem, 5vw, 4rem); position: relative; overflow: hidden; }
+.hero::after { content: ""; position: absolute; width: 60vw; height: 60vw; max-width: 760px; max-height: 760px; right: -20vw; top: -10vw; border-radius: 50%; background: radial-gradient(circle, var(--glow-soft), transparent 62%); pointer-events: none; }
+.hero .wrap { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, .85fr); gap: 2.5rem; align-items: center; position: relative; }
+.hero h1 { font-size: clamp(3.4rem, 11vw, 8.6rem); font-weight: 900; text-transform: uppercase; letter-spacing: -0.03em; line-height: .9; margin: .6rem 0 1rem; }
+.hero h1 em { font-style: normal; color: var(--accent); }
+.lede { font-size: clamp(1.05rem, 1.6vw, 1.3rem); max-width: 34ch; color: var(--muted); }
+.cta-row { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1.6rem; }
+.facts { display: flex; flex-wrap: wrap; gap: .5rem 1.6rem; margin-top: 2rem; padding-top: 1.2rem; border-top: 1px solid var(--line); }
+.facts div { display: grid; gap: .1rem; }
+.facts dt { font-family: var(--font-mono); font-size: .66rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.facts dd { margin: 0; font-weight: 600; font-size: .95rem; }
+
+/* Vinyl */
+.deck { display: grid; place-items: center; min-width: 0; }
+.vinyl { --size: min(380px, 78vw); width: var(--size); height: var(--size); max-width: 100%; border-radius: 50%; position: relative;
+  background:
+    radial-gradient(circle at 50% 50%, var(--bg) 0 9%, transparent 9.5%),
+    repeating-radial-gradient(circle at 50% 50%, #221b33 0 2px, #0c0915 2px 4px);
+  box-shadow: 0 30px 80px rgba(0,0,0,.55), inset 0 0 0 1px rgba(255,255,255,.06);
+  animation: spin 1.8s linear infinite; animation-play-state: paused; }
+.vinyl::before { content: ""; position: absolute; inset: 0; border-radius: 50%; background: conic-gradient(from 210deg, transparent 0 20%, rgba(255,255,255,.12) 26%, transparent 32%, transparent 60%, rgba(139,108,255,.25) 68%, transparent 74%); }
+.vinyl .label { position: absolute; inset: 31%; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #ffb27a, var(--accent) 55%, #c4551a); display: grid; place-content: center; text-align: center; color: var(--accent-ink); font-family: var(--font-display); font-weight: 900; font-size: clamp(.7rem, 2vw, .95rem); letter-spacing: .08em; text-transform: uppercase; padding: 10%; }
+.vinyl .label small { display: block; font-family: var(--font-mono); font-weight: 400; font-size: .6rem; letter-spacing: .14em; margin-top: .3rem; opacity: .85; }
+.vinyl .label::after { content: ""; position: absolute; left: 50%; top: 50%; width: 10px; height: 10px; margin: -5px; border-radius: 50%; background: var(--bg); }
+.vinyl.playing { animation-play-state: running; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.now { margin-top: 1rem; display: inline-flex; align-items: center; gap: .6rem; font-family: var(--font-mono); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.now b { width: 8px; height: 8px; border-radius: 50%; background: var(--line); }
+.now.on b { background: var(--ok); box-shadow: 0 0 0 4px color-mix(in srgb, var(--ok) 25%, transparent); }
+
+/* Ticker */
+.ticker { border-block: 1px solid var(--line); background: var(--bg-2); overflow: hidden; white-space: nowrap; }
+.ticker-track { display: inline-flex; gap: 0; animation: ticker 40s linear infinite; padding-block: .7rem; }
+.ticker:hover .ticker-track { animation-play-state: paused; }
+.ticker span { font-family: var(--font-mono); font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; padding-inline: 1.4rem; }
+.ticker span::after { content: "◆"; color: var(--accent); margin-left: 2.8rem; font-size: .6rem; vertical-align: middle; }
+@keyframes ticker { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .ticker { white-space: normal; } .ticker-track { flex-wrap: wrap; } .ticker-track > span:nth-child(n+8) { display: none; } }
+
+/* Sections */
+section.block { padding-block: clamp(3rem, 7vw, 5.5rem); border-bottom: 1px solid var(--line); }
+.sec-head { display: flex; align-items: end; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem; }
+.sec-head p { color: var(--muted); max-width: 48ch; }
+.two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 2.5rem; }
+.two > * { min-width: 0; }
+@media (max-width: 860px) { .hero .wrap, .two { grid-template-columns: 1fr; } .deck { order: -1; } }
+
+/* About */
+.about-copy { font-size: 1.05rem; max-width: 60ch; display: grid; gap: 1rem; }
+.about-copy strong { color: var(--fg); }
+.pullquote { border-left: 3px solid var(--accent); padding-left: 1.2rem; font-family: var(--font-display); font-weight: 500; font-size: 1.15rem; line-height: 1.35; }
+.about-side { display: grid; gap: 1.2rem; align-content: start; }
+.spec { border: 1px solid var(--line); background: var(--surface); padding: 1.1rem 1.2rem; }
+.spec h3 { font-size: .8rem; letter-spacing: .1em; text-transform: uppercase; margin-bottom: .7rem; font-family: var(--font-mono); font-weight: 700; color: var(--muted); }
+.spec ul { margin: 0; padding: 0; list-style: none; display: grid; gap: .45rem; font-size: .95rem; }
+.spec li { display: flex; gap: .6rem; align-items: baseline; }
+.spec li::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex: none; position: relative; top: -2px; }
+.tags { display: flex; flex-wrap: wrap; gap: .5rem; }
+.tag { font-family: var(--font-mono); font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; padding: .35rem .65rem; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); }
+
+/* Events */
+.tabs { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 3px; gap: 3px; }
+.tabs button { border: 0; background: transparent; color: var(--muted); font: 600 .82rem var(--font-body); padding: .5rem .95rem; border-radius: 999px; cursor: pointer; }
+.tabs button[aria-selected="true"] { background: var(--fg); color: var(--bg); }
+.events { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+.event { display: grid; grid-template-columns: 86px minmax(0, 1fr) auto; gap: 1.2rem; align-items: center; padding: 1.1rem 0; border-bottom: 1px solid var(--line); }
+.event .date { font-family: var(--font-display); line-height: 1; }
+.event .date b { display: block; font-size: 1.7rem; font-weight: 900; }
+.event .date span { font-family: var(--font-mono); font-size: .68rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.event h3 { font-size: 1.1rem; margin-bottom: .2rem; }
+.event .where { color: var(--muted); font-size: .92rem; }
+.event .meta { display: flex; flex-wrap: wrap; gap: .4rem .9rem; margin-top: .4rem; font-family: var(--font-mono); font-size: .72rem; letter-spacing: .06em; color: var(--muted); }
+.badge { display: inline-block; font-family: var(--font-mono); font-size: .64rem; letter-spacing: .1em; text-transform: uppercase; padding: .2rem .5rem; border-radius: 4px; background: var(--glow-soft); color: var(--fg); }
+.badge.hot { background: var(--accent); color: var(--accent-ink); }
+.event .act { display: flex; gap: .5rem; align-items: center; }
+.event.past { opacity: .78; grid-template-columns: 86px minmax(0, 1fr); }
+.event.past .act { display: none; }
+.year-row { display: flex; align-items: baseline; gap: 1rem; margin: 1.6rem 0 .3rem; }
+.year-row h3 { font-size: 1.5rem; font-weight: 900; }
+.year-row span { font-family: var(--font-mono); font-size: .72rem; color: var(--muted); letter-spacing: .1em; }
+.empty { padding: 2rem 0; color: var(--muted); }
+@media (max-width: 600px) { .event { grid-template-columns: 64px minmax(0, 1fr); } .event .act { grid-column: 2; justify-content: flex-start; } .event .date b { font-size: 1.4rem; } }
+
+/* Music */
+.player { background: var(--surface); border: 1px solid var(--line); padding: 1.2rem; display: grid; gap: 1rem; }
+.player-top { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 1rem; align-items: center; }
+.cover { width: 96px; height: 96px; background: linear-gradient(135deg, var(--glow), var(--accent)); display: grid; place-items: center; color: var(--accent-ink); font-family: var(--font-display); font-weight: 900; font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; text-align: center; padding: .5rem; }
+.player-title h3 { font-size: 1.15rem; margin-bottom: .25rem; }
+.player-title .meta { font-family: var(--font-mono); font-size: .72rem; color: var(--muted); letter-spacing: .06em; display: flex; flex-wrap: wrap; gap: .3rem .9rem; }
+.viz { display: flex; align-items: end; gap: 3px; height: 44px; }
+.viz i { flex: 1; background: var(--accent); height: 12%; border-radius: 2px 2px 0 0; opacity: .45; transition: height .2s; }
+.player.playing .viz i { animation: bounce 1s ease-in-out infinite; opacity: 1; }
+.player.playing .viz i:nth-child(odd) { animation-duration: .74s; }
+.player.playing .viz i:nth-child(3n) { animation-duration: 1.3s; }
+.player.playing .viz i:nth-child(5n) { animation-duration: .5s; }
+@keyframes bounce { 0%,100% { height: 18%; } 50% { height: 92%; } }
+.controls { display: flex; align-items: center; gap: .6rem; }
+.icon-btn { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line); background: transparent; color: var(--fg); display: grid; place-items: center; cursor: pointer; }
+.icon-btn svg { width: 18px; height: 18px; fill: currentColor; }
+.icon-btn.big { width: 56px; height: 56px; background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.seek { flex: 1; display: grid; gap: .35rem; min-width: 0; }
+.seek input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+.times { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: .68rem; color: var(--muted); }
+.player-note { font-size: .8rem; color: var(--muted); }
+.tracks { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); margin-top: .6rem; }
+.track { display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; gap: .8rem; align-items: center; padding: .75rem 0; border-bottom: 1px solid var(--line); cursor: pointer; }
+.track:hover .t-title { color: var(--accent); }
+.track .n { font-family: var(--font-mono); font-size: .72rem; color: var(--muted); }
+.track .t-title { font-weight: 600; }
+.track .t-sub { font-family: var(--font-mono); font-size: .68rem; color: var(--muted); letter-spacing: .05em; }
+.track .dur { font-family: var(--font-mono); font-size: .74rem; color: var(--muted); }
+.track.active .n { color: var(--accent); }
+.track.active .t-title { color: var(--accent); }
+.sc { display: grid; gap: 1rem; align-content: start; }
+.sc-frame { position: relative; border: 1px solid var(--line); background: var(--surface); min-height: 300px; }
+.sc-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.sc-fallback { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; gap: .6rem; padding: 1.5rem; color: var(--muted); font-size: .9rem; }
+.sc-fallback strong { font-family: var(--font-display); color: var(--fg); font-size: 1rem; }
+.sc-links { display: flex; flex-wrap: wrap; gap: .6rem; }
+
+/* Social */
+.handles { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: 1.8rem; }
+.handle { display: inline-flex; align-items: center; gap: .5rem; text-decoration: none; border: 1px solid var(--line); border-radius: 999px; padding: .5rem .9rem; font-size: .85rem; font-weight: 500; }
+.handle:hover { border-color: var(--fg); }
+.handle svg { width: 16px; height: 16px; fill: currentColor; }
+.handle span { color: var(--muted); font-family: var(--font-mono); font-size: .72rem; }
+.feed { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; }
+.post { border: 1px solid var(--line); background: var(--surface); text-decoration: none; display: grid; grid-template-rows: auto 1fr auto; min-height: 220px; }
+.post .art { aspect-ratio: 1.6; max-width: 100%; background: linear-gradient(160deg, var(--bg-2), var(--surface)); position: relative; overflow: hidden; }
+.post .art::after { content: ""; position: absolute; inset: auto -20% -40% auto; width: 70%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, var(--glow-soft), transparent 70%); }
+.post .art img { width: 100%; height: 100%; object-fit: cover; position: relative; }
+.post .body { padding: .9rem 1rem; font-size: .9rem; }
+.post .foot { padding: 0 1rem .9rem; display: flex; justify-content: space-between; align-items: center; font-family: var(--font-mono); font-size: .68rem; color: var(--muted); letter-spacing: .06em; }
+.post .foot svg { width: 14px; height: 14px; fill: currentColor; }
+.post:hover { border-color: var(--fg); }
+.post.embed { padding: 0; min-height: 0; }
+.post.embed iframe { width: 100%; min-height: 480px; border: 0; }
+
+/* Booking */
+.book-copy { display: grid; gap: 1.2rem; align-content: start; }
+.book-copy .big { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.2rem, 2.2vw, 1.5rem); line-height: 1.3; }
+.email-row { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; }
+.email-row code { font-family: var(--font-mono); font-size: .95rem; padding: .55rem .8rem; border: 1px dashed var(--line); user-select: all; }
+form.book { display: grid; gap: 1rem; background: var(--surface); border: 1px solid var(--line); padding: 1.4rem; }
+.field { display: grid; gap: .35rem; }
+.field label { font-family: var(--font-mono); font-size: .68rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.field input, .field select, .field textarea { width: 100%; background: var(--bg); color: var(--fg); border: 1px solid var(--line); padding: .75rem .85rem; font: 1rem var(--font-body); border-radius: 4px; }
+.field input:focus, .field select:focus, .field textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+.field textarea { min-height: 120px; resize: vertical; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+@media (max-width: 520px) { .grid2 { grid-template-columns: 1fr; } }
+.form-foot { display: flex; flex-wrap: wrap; gap: .8rem; align-items: center; justify-content: space-between; }
+.form-foot small { color: var(--muted); max-width: 32ch; }
+.status { border: 1px solid var(--line); padding: 1.2rem; display: grid; gap: .6rem; background: var(--surface); }
+.status.ok { border-color: var(--ok); }
+.status h3 { font-size: 1.2rem; }
+.status pre { white-space: pre-wrap; font: .8rem/1.5 var(--font-mono); background: var(--bg); padding: .9rem; border: 1px solid var(--line); margin: 0; max-height: 220px; overflow: auto; }
+
+/* Footer */
+footer { padding-block: 2.2rem 3rem; }
+footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; align-items: center; color: var(--muted); font-size: .85rem; }
+footer .wrap > div:first-child { font-family: var(--font-display); font-weight: 900; text-transform: uppercase; letter-spacing: .06em; color: var(--fg); }
+.toast { position: fixed; left: 50%; bottom: calc(1.2rem + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--fg); color: var(--bg); padding: .6rem 1rem; border-radius: 999px; font-size: .85rem; font-weight: 600; z-index: 30; }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="wordmark" href="#top" id="wordmark"><i></i><span id="wm-text">Kova</span></a>
+    <ul class="navlinks" id="navlinks">
+      <li><a href="#about">About</a></li>
+      <li><a href="#events">Events</a></li>
+      <li><a href="#music">Music</a></li>
+      <li><a href="#social">Social</a></li>
+      <li><a href="#book">Booking</a></li>
+    </ul>
+    <div style="display:flex;gap:.5rem;align-items:center">
+      <a class="btn primary small" href="#book">Book now</a>
+      <button class="btn small menu-btn" id="menu-btn" aria-expanded="false" aria-controls="navlinks">Menu</button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <p class="eyebrow" id="hero-eyebrow">House · Detroit, MI</p>
+        <h1 id="hero-name">Kova</h1>
+        <p class="lede" id="hero-lede"></p>
+        <div class="cta-row">
+          <a class="btn primary" href="#book">Book now</a>
+          <button class="btn" id="hero-listen" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>
+            Listen
+          </button>
+          <a class="btn" id="hero-sc" href="#" target="_blank" rel="noopener">SoundCloud ↗</a>
+        </div>
+        <dl class="facts" id="facts"></dl>
+      </div>
+      <div class="deck">
+        <div class="vinyl" id="vinyl" aria-hidden="true">
+          <div class="label" id="vinyl-label">Kova<small>Side A · 33⅓</small></div>
+        </div>
+        <div class="now" id="now"><b></b><span id="now-text">Deck idle</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="ticker" aria-label="Upcoming dates">
+    <div class="ticker-track" id="ticker"></div>
+  </div>
+
+  <section class="block" id="about">
+    <div class="wrap two">
+      <div>
+        <p class="eyebrow">About</p>
+        <h2 id="about-title"></h2>
+        <div class="about-copy" id="about-copy" style="margin-top:1.4rem"></div>
+      </div>
+      <div class="about-side">
+        <div class="spec">
+          <h3>Sound</h3>
+          <div class="tags" id="genres"></div>
+        </div>
+        <div class="spec">
+          <h3>Setup</h3>
+          <ul id="rider"></ul>
+        </div>
+        <div class="spec">
+          <h3>Played</h3>
+          <ul id="credits"></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="events">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <p class="eyebrow">Events</p>
+          <h2>Dates</h2>
+        </div>
+        <div class="tabs" role="tablist" aria-label="Event lists">
+          <button role="tab" id="tab-upcoming" aria-selected="true" aria-controls="list-upcoming">Upcoming</button>
+          <button role="tab" id="tab-past" aria-selected="false" aria-controls="list-past">Past</button>
+        </div>
+      </div>
+      <ul class="events" id="list-upcoming" role="tabpanel" aria-labelledby="tab-upcoming"></ul>
+      <div id="list-past" role="tabpanel" aria-labelledby="tab-past" hidden></div>
+    </div>
+  </section>
+
+  <section class="block" id="music">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <p class="eyebrow">Music</p>
+          <h2>Mixes &amp; sets</h2>
+        </div>
+        <p>Recorded sets and originals. Press play here, or follow on SoundCloud for everything.</p>
+      </div>
+      <div class="two">
+        <div>
+          <div class="player" id="player">
+            <div class="player-top">
+              <div class="cover" id="cover">Mix</div>
+              <div class="player-title">
+                <h3 id="p-title">—</h3>
+                <div class="meta" id="p-meta"></div>
+              </div>
+            </div>
+            <div class="viz" id="viz" aria-hidden="true"></div>
+            <div class="controls">
+              <button class="icon-btn" id="prev" type="button" aria-label="Previous track"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg></button>
+              <button class="icon-btn big" id="play" type="button" aria-label="Play"><svg viewBox="0 0 24 24" id="play-icon"><path d="M8 5v14l11-7z"/></svg></button>
+              <button class="icon-btn" id="next" type="button" aria-label="Next track"><svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6h2v12h-2z"/></svg></button>
+              <div class="seek">
+                <input type="range" id="seek" min="0" max="1000" value="0" aria-label="Seek">
+                <div class="times"><span id="t-cur">0:00</span><span id="t-dur">0:00</span></div>
+              </div>
+            </div>
+            <p class="player-note" id="p-note"></p>
+          </div>
+          <ol class="tracks" id="tracks"></ol>
+        </div>
+        <div class="sc">
+          <div class="sc-frame" id="sc-frame">
+            <div class="sc-fallback">
+              <strong id="sc-fb-title">SoundCloud</strong>
+              <span>The embedded player shows here on the live site. If it does not load, open the profile directly.</span>
+            </div>
+          </div>
+          <div class="sc-links" id="sc-links"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="social">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <p class="eyebrow">Social</p>
+          <h2>Latest</h2>
+        </div>
+        <p>Clips from the booth, set announcements, and the occasional record haul.</p>
+      </div>
+      <div class="handles" id="handles"></div>
+      <div class="feed" id="feed"></div>
+    </div>
+  </section>
+
+  <section class="block" id="book">
+    <div class="wrap two">
+      <div class="book-copy">
+        <p class="eyebrow">Booking</p>
+        <h2>Book a set</h2>
+        <p class="big" id="book-pitch"></p>
+        <p class="muted" id="book-detail"></p>
+        <div class="email-row">
+          <code id="book-email"></code>
+          <button class="btn small" id="copy-email" type="button">Copy email</button>
+        </div>
+        <div class="spec">
+          <h3>Good to include</h3>
+          <ul id="book-tips"></ul>
+        </div>
+      </div>
+      <div id="form-wrap">
+        <form class="book" id="book-form" novalidate>
+          <div class="grid2">
+            <div class="field"><label for="f-name">Your name</label><input id="f-name" name="name" type="text" autocomplete="name" required></div>
+            <div class="field"><label for="f-email">Email</label><input id="f-email" name="email" type="email" autocomplete="email" required></div>
+          </div>
+          <div class="grid2">
+            <div class="field"><label for="f-date">Event date</label><input id="f-date" name="date" type="date" required></div>
+            <div class="field"><label for="f-type">Event type</label>
+              <select id="f-type" name="type">
+                <option>Club night</option><option>Bar / lounge residency</option><option>Private party</option><option>Wedding</option><option>Festival / outdoor</option><option>Corporate / brand</option><option>Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="grid2">
+            <div class="field"><label for="f-venue">Venue &amp; city</label><input id="f-venue" name="venue" type="text" placeholder="The Annex, Detroit"></div>
+            <div class="field"><label for="f-set">Set length</label>
+              <select id="f-set" name="set"><option>2 hours</option><option>3 hours</option><option>4 hours</option><option>Open to close</option><option>Not sure yet</option></select>
+            </div>
+          </div>
+          <div class="field"><label for="f-msg">Details</label><textarea id="f-msg" name="message" placeholder="Set time, crowd, budget range, other acts on the bill, sound setup on site."></textarea></div>
+          <div class="form-foot">
+            <small id="form-note">Replies usually within two days.</small>
+            <button class="btn primary" type="submit" id="submit-btn">Send booking request</button>
+          </div>
+          <p id="form-error" class="muted" style="color:var(--accent)" hidden></p>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div id="foot-name">Kova</div>
+    <div id="foot-city"></div>
+    <div class="mono" id="foot-copy"></div>
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   EDIT EVERYTHING BELOW. All copy, dates, links and tracks on the
+   page come from this one object. Sample content is marked.
+   ============================================================ */
+const SITE = {
+  name: "Kova",
+  city: "Detroit, MI",
+  genre: "House",
+  lede: "Deep, soulful and jacking house for rooms that want to dance until the lights come up.",
+  // Hero facts strip
+  facts: [
+    ["Sets", "2 hrs to open-to-close"],
+    ["Tempo", "120 to 128 BPM"],
+    ["Format", "Vinyl + CDJ"],
+    ["Based", "Detroit, MI"]
+  ],
+  about: {
+    title: "Four on the floor, nothing wasted.",
+    paragraphs: [
+      "<strong>Kova</strong> has spent the last six years behind decks in Detroit basements, rooftop bars and the occasional warehouse, playing house music the way the city taught it: deep, soulful, jacking and patient.",
+      "Expect long blends, records you have not heard in years next to white labels from this month, and a set that builds with the room instead of fighting it. Residencies have included Thursday nights at The Annex and the monthly Groove Theory party.",
+      "Available for club nights, bar residencies, private parties, weddings and brand events across Michigan and the Midwest. Travel further for the right night."
+    ],
+    quote: "The job is to make the room feel like it is in on something."
+  },
+  genres: ["Deep house", "Soulful house", "Jackin'", "Detroit house", "Disco edits", "Garage"],
+  rider: [
+    "2x Pioneer CDJ-3000 + DJM-900NXS2 (or DJM-A9)",
+    "Or 2x Technics SL-1200 with a rotary mixer",
+    "One booth monitor, booth-level control",
+    "Can supply a full setup for private events"
+  ],
+  credits: ["The Annex (resident)", "Groove Theory monthly", "Rooftop Sessions, Corktown", "Summer in the Park 2025", "Closing set, Riverfront Block Party"],
+
+  // Events. Dates are YYYY-MM-DD. Anything on or after today shows under Upcoming, older ones under Past.
+  // SAMPLE DATA: replace with real dates.
+  events: [
+    { date: "2026-11-28", title: "Groove Theory", venue: "The Annex", city: "Detroit, MI", time: "10PM to 2AM", tag: "Residency", link: "#" },
+    { date: "2026-12-06", title: "Winter Warm Up", venue: "Basement 11", city: "Ann Arbor, MI", time: "11PM to 3AM", tag: "B2B", note: "B2B with Lena Ortiz", link: "#" },
+    { date: "2026-12-19", title: "Holiday Disco", venue: "Hazel Hall", city: "Royal Oak, MI", time: "9PM to 1AM", tag: "Open to close", link: "#" },
+    { date: "2026-12-31", title: "New Year's Eve", venue: "The Annex", city: "Detroit, MI", time: "10PM to 4AM", tag: "Hot", link: "#" },
+    { date: "2027-01-23", title: "Groove Theory", venue: "The Annex", city: "Detroit, MI", time: "10PM to 2AM", tag: "Residency", link: "#" },
+    { date: "2026-10-31", title: "Halloween Haunt", venue: "Hazel Hall", city: "Royal Oak, MI", time: "10PM to 3AM" },
+    { date: "2026-10-16", title: "Groove Theory", venue: "The Annex", city: "Detroit, MI", time: "10PM to 2AM" },
+    { date: "2026-09-13", title: "Rooftop Sessions", venue: "Corktown Rooftop", city: "Detroit, MI", time: "6PM to 11PM" },
+    { date: "2026-08-22", title: "Summer in the Park", venue: "Palmer Park", city: "Detroit, MI", time: "4PM to 6PM" },
+    { date: "2026-07-18", title: "Riverfront Block Party", venue: "Riverfront Stage", city: "Detroit, MI", time: "Closing set" },
+    { date: "2026-05-24", title: "After Hours", venue: "Basement 11", city: "Ann Arbor, MI", time: "2AM to 6AM" },
+    { date: "2025-12-31", title: "New Year's Eve", venue: "The Annex", city: "Detroit, MI", time: "10PM to 4AM" },
+    { date: "2025-10-11", title: "Groove Theory launch", venue: "The Annex", city: "Detroit, MI", time: "10PM to 2AM" },
+    { date: "2025-06-07", title: "Garden Party", venue: "Private residence", city: "Birmingham, MI", time: "5PM to 10PM" }
+  ],
+
+  // Player tracks. Put MP3 files in an audio/ folder next to this file and set src.
+  // A track with demo: true plays a synthesized house groove so the player works before files are added.
+  tracks: [
+    { title: "Warehouse Session 014", sub: "Live recording · 124 BPM", duration: "2:00", demo: true },
+    { title: "Groove Theory Vol. 3", sub: "Mix · 122 to 126 BPM", duration: "1:14:20", src: "audio/groove-theory-vol-3.mp3" },
+    { title: "Late Shift (Original)", sub: "Original · 125 BPM", duration: "6:48", src: "audio/late-shift.mp3" },
+    { title: "Rooftop Sessions, Sept", sub: "Live recording · 118 to 124 BPM", duration: "2:31:05", src: "audio/rooftop-sept.mp3" }
+  ],
+
+  // Links. SoundCloud profile URL drives the embed and the Listen buttons.
+  soundcloud: "https://soundcloud.com/your-soundcloud-name",
+  socials: [
+    { name: "Instagram", handle: "@kova.plays", url: "https://instagram.com/", icon: "ig" },
+    { name: "TikTok", handle: "@kova.plays", url: "https://tiktok.com/", icon: "tt" },
+    { name: "SoundCloud", handle: "kova", url: "https://soundcloud.com/", icon: "sc" },
+    { name: "Mixcloud", handle: "kova", url: "https://mixcloud.com/", icon: "mc" },
+    { name: "Resident Advisor", handle: "kova", url: "https://ra.co/", icon: "ra" }
+  ],
+  // Feed cards. For an Instagram post set embed: true and url to the post; the live site shows the post itself.
+  // SAMPLE DATA.
+  feed: [
+    { platform: "Instagram", date: "2026-11-15", text: "NYE at The Annex is on. Ten to four, open to close. Early birds go up Friday.", url: "https://instagram.com/" },
+    { platform: "TikTok", date: "2026-11-09", text: "That moment at Groove Theory when the whole floor caught the vocal. Full clip on TikTok.", url: "https://tiktok.com/" },
+    { platform: "Instagram", date: "2026-11-02", text: "Record haul from the weekend. Three Chicago classics and one white label I cannot name yet.", url: "https://instagram.com/" },
+    { platform: "SoundCloud", date: "2026-10-27", text: "Warehouse Session 014 is up. Two hours, no talking, recorded straight off the mixer.", url: "https://soundcloud.com/" },
+    { platform: "Instagram", date: "2026-10-18", text: "Groove Theory, October. Thank you Detroit.", url: "https://instagram.com/" },
+    { platform: "TikTok", date: "2026-10-05", text: "Beatmatching on vinyl in 40 seconds. Part one of a few.", url: "https://tiktok.com/" }
+  ],
+
+  booking: {
+    email: "bookings@kova.example",   // shown on the page and used for the request
+    endpoint: "",                      // optional: a Formspree or similar POST URL. Leave blank to use email.
+    pitch: "Club nights, residencies, private parties and weddings. Tell me about the room and the night, and I will come back with availability and a quote.",
+    detail: "Based in Detroit. Travel across Michigan and the Midwest with notice. Deposits hold the date.",
+    tips: ["Date, venue and set time", "Expected crowd size and vibe", "Sound and booth setup on site", "Budget range", "Other acts on the bill"]
+  }
+};
+/* ======================= END OF EDITABLE CONTENT ======================= */
+
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const ICONS = {
+  ig: '<svg viewBox="0 0 24 24"><path d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 8.2a3.2 3.2 0 1 1 0-6.4 3.2 3.2 0 0 1 0 6.4zM17.4 5.4a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4zM21 7.6c0-1.6-.4-3-1.5-4.1S17 2 15.4 2H8.6C7 2 5.6 2.4 4.5 3.5S3 6 3 7.6v8.8c0 1.6.4 3 1.5 4.1S7 22 8.6 22h6.8c1.6 0 3-.4 4.1-1.5S21 18 21 16.4V7.6zm-1.8 8.8c0 1.2-.3 2.1-.9 2.7s-1.5.9-2.7.9H8.4c-1.2 0-2.1-.3-2.7-.9s-.9-1.5-.9-2.7V7.6c0-1.2.3-2.1.9-2.7s1.5-.9 2.7-.9h7.2c1.2 0 2.1.3 2.7.9s.9 1.5.9 2.7v8.8z"/></svg>',
+  tt: '<svg viewBox="0 0 24 24"><path d="M16.5 2h-3.2v13.4a3 3 0 1 1-2.6-3v-3.3a6.3 6.3 0 1 0 5.8 6.3V9.2a7.4 7.4 0 0 0 4.3 1.4V7.4A4.4 4.4 0 0 1 16.5 2z"/></svg>',
+  sc: '<svg viewBox="0 0 24 24"><path d="M2 14h1.2v4H2zm2.4-2h1.2v6H4.4zm2.4-3h1.2v9H6.8zm2.4 1h1.2v8H9.2zm2.4-4h1.2v12h-1.2zm3-1.6c.5-.2 1.1-.4 1.7-.4a4.5 4.5 0 0 1 4.4 3.8A3 3 0 0 1 21 18h-6.4V4.4z"/></svg>',
+  mc: '<svg viewBox="0 0 24 24"><path d="M3 9h2v6H3zm4-3h2v12H7zm4 2h2v8h-2zm4-3h2v14h-2zm4 4h2v6h-2z"/></svg>',
+  ra: '<svg viewBox="0 0 24 24"><path d="M4 5h7a4 4 0 0 1 1.6 7.7L15.5 19h-3.1l-2.4-5.5H6.8V19H4V5zm2.8 2.6v3.3H11a1.6 1.6 0 1 0 0-3.3H6.8zM17 5h3v14h-3z"/></svg>',
+  default: '<svg viewBox="0 0 24 24"><path d="M14 4h6v6h-2V7.4l-7.3 7.3-1.4-1.4L16.6 6H14V4zM5 7h6v2H7v8h8v-4h2v6H5V7z"/></svg>'
+};
+const iconFor = (p) => ICONS[{ instagram: "ig", tiktok: "tt", soundcloud: "sc", mixcloud: "mc", "resident advisor": "ra" }[String(p).toLowerCase()] || p] || ICONS.default;
+
+/* ---------- Static copy ---------- */
+document.title = `${SITE.name} House DJ`;
+$("#wm-text").textContent = SITE.name;
+$("#hero-name").innerHTML = esc(SITE.name).replace(/^(\S)/, "<em>$1</em>");
+$("#hero-eyebrow").textContent = `${SITE.genre} · ${SITE.city}`;
+$("#hero-lede").textContent = SITE.lede;
+$("#hero-sc").href = SITE.soundcloud;
+$("#vinyl-label").innerHTML = `${esc(SITE.name)}<small>Side A · 33⅓</small>`;
+$("#facts").innerHTML = SITE.facts.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join("");
+$("#about-title").textContent = SITE.about.title;
+$("#about-copy").innerHTML = SITE.about.paragraphs.map((p) => `<p>${p}</p>`).join("") + (SITE.about.quote ? `<p class="pullquote">“${esc(SITE.about.quote)}”</p>` : "");
+$("#genres").innerHTML = SITE.genres.map((g) => `<span class="tag">${esc(g)}</span>`).join("");
+$("#rider").innerHTML = SITE.rider.map((r) => `<li>${esc(r)}</li>`).join("");
+$("#credits").innerHTML = SITE.credits.map((r) => `<li>${esc(r)}</li>`).join("");
+$("#foot-name").textContent = SITE.name;
+$("#foot-city").textContent = `${SITE.genre} DJ · ${SITE.city}`;
+$("#foot-copy").textContent = `© ${new Date().getFullYear()} ${SITE.name}`;
+
+/* ---------- Nav ---------- */
+const menuBtn = $("#menu-btn"), navlinks = $("#navlinks");
+menuBtn.addEventListener("click", () => {
+  const open = navlinks.classList.toggle("open");
+  menuBtn.setAttribute("aria-expanded", String(open));
+});
+navlinks.addEventListener("click", (e) => { if (e.target.tagName === "A") { navlinks.classList.remove("open"); menuBtn.setAttribute("aria-expanded", "false"); } });
+
+/* ---------- Events ---------- */
+const todayStr = new Date().toISOString().slice(0, 10);
+const parseDate = (s) => new Date(s + "T12:00:00");
+const upcoming = SITE.events.filter((e) => e.date >= todayStr).sort((a, b) => a.date.localeCompare(b.date));
+const past = SITE.events.filter((e) => e.date < todayStr).sort((a, b) => b.date.localeCompare(a.date));
+const fmtMonth = (d) => d.toLocaleDateString("en-US", { month: "short" });
+const fmtDay = (d) => String(d.getDate());
+const fmtWeekday = (d) => d.toLocaleDateString("en-US", { weekday: "short" });
+
+function eventRow(e, isPast) {
+  const d = parseDate(e.date);
+  const tag = e.tag ? `<span class="badge ${e.tag === "Hot" ? "hot" : ""}">${e.tag === "Hot" ? "Selling fast" : esc(e.tag)}</span>` : "";
+  const link = e.link && !isPast ? `<a class="btn small" href="${esc(e.link)}" target="_blank" rel="noopener">Tickets ↗</a>` : "";
+  return `<li class="event ${isPast ? "past" : ""}">
+    <div class="date"><span>${fmtWeekday(d)} ${fmtMonth(d)}</span><b>${fmtDay(d)}</b></div>
+    <div>
+      <h3>${esc(e.title)} ${tag}</h3>
+      <div class="where">${esc(e.venue)} · ${esc(e.city)}</div>
+      <div class="meta">${e.time ? `<span>${esc(e.time)}</span>` : ""}${e.note ? `<span>${esc(e.note)}</span>` : ""}</div>
+    </div>
+    <div class="act">${link}</div>
+  </li>`;
+}
+$("#list-upcoming").innerHTML = upcoming.length ? upcoming.map((e) => eventRow(e, false)).join("") : `<li class="empty">No dates announced yet. Follow on Instagram for the next one, or book a night below.</li>`;
+
+const byYear = {};
+past.forEach((e) => { const y = e.date.slice(0, 4); (byYear[y] ||= []).push(e); });
+$("#list-past").innerHTML = Object.keys(byYear).sort((a, b) => b.localeCompare(a)).map((y) => `
+  <div class="year-row"><h3>${y}</h3><span>${byYear[y].length} ${byYear[y].length === 1 ? "date" : "dates"}</span></div>
+  <ul class="events">${byYear[y].map((e) => eventRow(e, true)).join("")}</ul>`).join("") || `<p class="empty">No past dates listed yet.</p>`;
+
+const tabU = $("#tab-upcoming"), tabP = $("#tab-past");
+function showTab(which) {
+  const up = which === "upcoming";
+  tabU.setAttribute("aria-selected", String(up)); tabP.setAttribute("aria-selected", String(!up));
+  $("#list-upcoming").hidden = !up; $("#list-past").hidden = up;
+}
+tabU.addEventListener("click", () => showTab("upcoming"));
+tabP.addEventListener("click", () => showTab("past"));
+
+// Ticker: next three dates, doubled so the loop is seamless
+const tickerItems = (upcoming.slice(0, 3).map((e) => { const d = parseDate(e.date); return `${fmtMonth(d)} ${fmtDay(d)} · ${e.venue}, ${e.city.split(",")[0]} · ${e.time || ""}`.trim(); })
+  .concat([`${SITE.genre} · ${SITE.city}`, "Now booking " + new Date().getFullYear() + " and " + (new Date().getFullYear() + 1)]));
+$("#ticker").innerHTML = [...tickerItems, ...tickerItems, ...tickerItems, ...tickerItems].map((t) => `<span>${esc(t)}</span>`).join("");
+
+/* ---------- Player ---------- */
+const audio = new Audio();
+audio.preload = "metadata";
+let current = 0, playing = false;
+let demo = null; // Web Audio synth state
+const vizEl = $("#viz"); vizEl.innerHTML = Array.from({ length: 36 }, () => "<i></i>").join("");
+const playerEl = $("#player"), vinyl = $("#vinyl"), nowEl = $("#now"), nowText = $("#now-text");
+const playIcon = $("#play-icon");
+const pathPlay = "M8 5v14l11-7z", pathPause = "M6 5h4v14H6zm8 0h4v14h-4z";
+
+function renderTracks() {
+  $("#tracks").innerHTML = SITE.tracks.map((t, i) => `
+    <li class="track ${i === current ? "active" : ""}" data-i="${i}" tabindex="0" role="button" aria-label="Play ${esc(t.title)}">
+      <span class="n">${String(i + 1).padStart(2, "0")}</span>
+      <span><div class="t-title">${esc(t.title)}</div><div class="t-sub">${esc(t.sub || "")}</div></span>
+      <span class="dur">${esc(t.duration || "")}</span>
+    </li>`).join("");
+}
+function loadTrack(i, autoplay) {
+  current = (i + SITE.tracks.length) % SITE.tracks.length;
+  const t = SITE.tracks[current];
+  stopDemo();
+  audio.pause();
+  $("#p-title").textContent = t.title;
+  $("#p-meta").innerHTML = (t.sub || "").split("·").map((s) => `<span>${esc(s.trim())}</span>`).join("");
+  $("#cover").textContent = t.demo ? "Demo" : (t.sub || "Mix").split("·")[0].trim();
+  $("#t-dur").textContent = t.demo ? "2:00" : (t.duration || "0:00");
+  $("#t-cur").textContent = "0:00"; $("#seek").value = 0;
+  $("#p-note").textContent = t.demo ? "Built-in demo groove, generated in the browser. Replace with a recorded mix in the tracks list." : "";
+  if (!t.demo) { audio.src = t.src || ""; }
+  renderTracks();
+  setPlaying(false);
+  if (autoplay) play();
+}
+function setPlaying(on) {
+  playing = on;
+  playerEl.classList.toggle("playing", on);
+  vinyl.classList.toggle("playing", on);
+  nowEl.classList.toggle("on", on);
+  nowText.textContent = on ? `Now playing · ${SITE.tracks[current].title}` : "Deck idle";
+  playIcon.firstElementChild.setAttribute("d", on ? pathPause : pathPlay);
+  $("#play").setAttribute("aria-label", on ? "Pause" : "Play");
+}
+function play() {
+  const t = SITE.tracks[current];
+  if (t.demo) { startDemo(); setPlaying(true); return; }
+  audio.play().then(() => setPlaying(true)).catch(() => {
+    $("#p-note").textContent = `Could not load "${t.title}". Add the file at ${t.src || "(no src set)"} or point src at a hosted MP3.`;
+    setPlaying(false);
+  });
+}
+function pause() { if (SITE.tracks[current].demo) stopDemo(); else audio.pause(); setPlaying(false); }
+$("#play").addEventListener("click", () => (playing ? pause() : play()));
+$("#hero-listen").addEventListener("click", () => { if (!playing) play(); document.getElementById("music").scrollIntoView({ behavior: "smooth" }); });
+$("#prev").addEventListener("click", () => loadTrack(current - 1, playing));
+$("#next").addEventListener("click", () => loadTrack(current + 1, playing));
+$("#tracks").addEventListener("click", (e) => { const li = e.target.closest(".track"); if (li) loadTrack(+li.dataset.i, true); });
+$("#tracks").addEventListener("keydown", (e) => { const li = e.target.closest(".track"); if (li && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); loadTrack(+li.dataset.i, true); } });
+
+const fmtTime = (s) => { s = Math.max(0, Math.floor(s || 0)); const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60; return (h ? h + ":" + String(m).padStart(2, "0") : m) + ":" + String(sec).padStart(2, "0"); };
+audio.addEventListener("timeupdate", () => { if (audio.duration) { $("#seek").value = Math.round((audio.currentTime / audio.duration) * 1000); $("#t-cur").textContent = fmtTime(audio.currentTime); } });
+audio.addEventListener("loadedmetadata", () => { if (audio.duration) $("#t-dur").textContent = fmtTime(audio.duration); });
+audio.addEventListener("ended", () => loadTrack(current + 1, true));
+$("#seek").addEventListener("input", (e) => {
+  const frac = e.target.value / 1000;
+  if (SITE.tracks[current].demo) { if (demo) demo.offset = frac * 120; $("#t-cur").textContent = fmtTime(frac * 120); }
+  else if (audio.duration) audio.currentTime = frac * audio.duration;
+});
+
+/* Demo groove: a 124 BPM four-on-the-floor loop built with the Web Audio API (kick, hats, clap, bass, chord stab). */
+function startDemo() {
+  const Ctx = window.AudioContext || window.webkitAudioContext;
+  if (!Ctx) { $("#p-note").textContent = "This browser cannot generate the demo groove. Add a recorded mix to the tracks list."; return; }
+  const ctx = demo?.ctx || new Ctx();
+  ctx.resume();
+  const master = ctx.createGain(); master.gain.value = 0.7;
+  const comp = ctx.createDynamicsCompressor(); comp.threshold.value = -14; comp.ratio.value = 4;
+  master.connect(comp).connect(ctx.destination);
+  const bpm = 124, step = 60 / bpm / 4; // 16th notes
+  const startAt = ctx.currentTime + 0.05;
+  const state = { ctx, master, bpm, step, startAt, nextStep: 0, timer: 0, offset: demo?.offset || 0, raf: 0 };
+  demo = state;
+  const bassNotes = [41.2, 41.2, 49, 41.2, 41.2, 36.7, 41.2, 55]; // E1 pattern with a G/D/A move every bar
+  const chord = [164.8, 196, 246.9, 293.7]; // Em7 stab
+
+  function kick(t) { const o = ctx.createOscillator(), g = ctx.createGain(); o.frequency.setValueAtTime(150, t); o.frequency.exponentialRampToValueAtTime(42, t + 0.12); g.gain.setValueAtTime(1, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.32); o.connect(g).connect(master); o.start(t); o.stop(t + 0.35); }
+  function noise(t, dur, hp, vol) { const b = ctx.createBuffer(1, ctx.sampleRate * dur, ctx.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; const s = ctx.createBufferSource(); s.buffer = b; const f = ctx.createBiquadFilter(); f.type = "highpass"; f.frequency.value = hp; const g = ctx.createGain(); g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.001, t + dur); s.connect(f).connect(g).connect(master); s.start(t); }
+  function bass(t, f) { const o = ctx.createOscillator(), g = ctx.createGain(), lp = ctx.createBiquadFilter(); o.type = "sawtooth"; o.frequency.value = f; lp.type = "lowpass"; lp.frequency.setValueAtTime(900, t); lp.frequency.exponentialRampToValueAtTime(180, t + 0.18); g.gain.setValueAtTime(0.35, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.2); o.connect(lp).connect(g).connect(master); o.start(t); o.stop(t + 0.22); }
+  function stab(t) { const g = ctx.createGain(), lp = ctx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.setValueAtTime(2400, t); lp.frequency.exponentialRampToValueAtTime(500, t + 0.25); g.gain.setValueAtTime(0.09, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.28); chord.forEach((f) => { const o = ctx.createOscillator(); o.type = "square"; o.frequency.value = f; o.detune.value = (Math.random() - 0.5) * 12; o.connect(lp); o.start(t); o.stop(t + 0.3); }); lp.connect(g).connect(master); }
+
+  function schedule() {
+    if (demo !== state) return;
+    while (state.startAt + state.nextStep * step < ctx.currentTime + 0.25) {
+      const n = state.nextStep, t = state.startAt + n * step, s16 = n % 16, bar = Math.floor(n / 16);
+      if (s16 % 4 === 0) kick(t);
+      if (s16 % 4 === 2) noise(t, 0.08, 7000, 0.25);           // open-ish hat on the off beat
+      if (s16 % 2 === 1) noise(t, 0.03, 9000, 0.12);           // closed 16ths
+      if (s16 === 4 || s16 === 12) noise(t, 0.12, 1500, 0.3);  // clap
+      if (s16 % 2 === 0 && s16 % 4 !== 0) bass(t, bassNotes[(bar * 2 + Math.floor(s16 / 8)) % bassNotes.length]);
+      if (bar % 2 === 1 && (s16 === 3 || s16 === 11)) stab(t); // stab every other bar
+      state.nextStep++;
+    }
+    state.timer = setTimeout(schedule, 60);
+  }
+  schedule();
+  function tick() {
+    if (demo !== state) return;
+    const el = state.offset + (ctx.currentTime - state.startAt);
+    if (el >= 120) { stopDemo(); loadTrack(current + 1, true); return; }
+    $("#t-cur").textContent = fmtTime(el); $("#seek").value = Math.round((el / 120) * 1000);
+    state.raf = requestAnimationFrame(tick);
+  }
+  tick();
+}
+function stopDemo() {
+  if (!demo) return;
+  const d = demo; demo = null;
+  clearTimeout(d.timer); cancelAnimationFrame(d.raf);
+  d.offset = d.offset + (d.ctx.currentTime - d.startAt);
+  d.master.gain.setTargetAtTime(0, d.ctx.currentTime, 0.02);
+  setTimeout(() => d.master.disconnect(), 200);
+  d.ctx.suspend();
+}
+loadTrack(0, false);
+
+/* ---------- SoundCloud ---------- */
+(function () {
+  const url = SITE.soundcloud;
+  const frame = $("#sc-frame");
+  if (url && url.startsWith("https://soundcloud.com/")) {
+    const ifr = document.createElement("iframe");
+    ifr.title = "SoundCloud player";
+    ifr.allow = "autoplay";
+    ifr.loading = "lazy";
+    ifr.src = "https://w.soundcloud.com/player/?url=" + encodeURIComponent(url) + "&color=%23ff8b3d&auto_play=false&hide_related=true&show_comments=false&show_user=true&visual=true";
+    frame.appendChild(ifr);
+  }
+  $("#sc-fb-title").textContent = `${SITE.name} on SoundCloud`;
+  $("#sc-links").innerHTML = `<a class="btn primary" href="${esc(url)}" target="_blank" rel="noopener">Open on SoundCloud ↗</a><a class="btn" href="${esc(url)}/tracks" target="_blank" rel="noopener">All tracks</a>`;
+})();
+
+/* ---------- Social ---------- */
+$("#handles").innerHTML = SITE.socials.map((s) => `<a class="handle" href="${esc(s.url)}" target="_blank" rel="noopener">${iconFor(s.icon || s.name)}${esc(s.name)} <span>${esc(s.handle)}</span></a>`).join("");
+const fmtPostDate = (s) => parseDate(s).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+$("#feed").innerHTML = SITE.feed.map((p) => {
+  if (p.embed && /instagram\.com\/(p|reel)\//.test(p.url)) {
+    return `<div class="post embed"><iframe src="${esc(p.url.replace(/\/?$/, "/embed/"))}" title="Instagram post" loading="lazy"></iframe></div>`;
+  }
+  return `<a class="post" href="${esc(p.url)}" target="_blank" rel="noopener">
+    <div class="art">${p.image ? `<img src="${esc(p.image)}" alt="">` : ""}</div>
+    <div class="body">${esc(p.text)}</div>
+    <div class="foot"><span>${esc(p.platform)} · ${fmtPostDate(p.date)}</span>${iconFor(p.platform)}</div>
+  </a>`;
+}).join("");
+
+/* ---------- Booking ---------- */
+$("#book-pitch").textContent = SITE.booking.pitch;
+$("#book-detail").textContent = SITE.booking.detail;
+$("#book-email").textContent = SITE.booking.email;
+$("#book-tips").innerHTML = SITE.booking.tips.map((t) => `<li>${esc(t)}</li>`).join("");
+$("#f-date").min = todayStr;
+
+function toast(msg) { const t = document.createElement("div"); t.className = "toast"; t.textContent = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 1800); }
+function copyText(text) {
+  return navigator.clipboard.writeText(text).then(() => true).catch(() => {
+    const ta = document.createElement("textarea"); ta.value = text; document.body.appendChild(ta); ta.select();
+    let ok = false; try { ok = document.execCommand("copy"); } catch (e) {} ta.remove(); return ok;
+  });
+}
+$("#copy-email").addEventListener("click", () => copyText(SITE.booking.email).then((ok) => toast(ok ? "Email copied" : "Select the address to copy it")));
+
+const form = $("#book-form");
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const err = $("#form-error"); err.hidden = true;
+  const data = Object.fromEntries(new FormData(form).entries());
+  if (!data.name.trim() || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(data.email) || !data.date) {
+    err.textContent = "Add your name, a valid email and the event date, then send again."; err.hidden = false; return;
+  }
+  const summary = `Booking request for ${SITE.name}\n\nName: ${data.name}\nEmail: ${data.email}\nDate: ${data.date}\nType: ${data.type}\nVenue: ${data.venue || "(not given)"}\nSet length: ${data.set}\n\n${data.message || ""}`.trim();
+  const btn = $("#submit-btn"); btn.disabled = true; btn.textContent = "Sending…";
+  if (SITE.booking.endpoint) {
+    try {
+      const r = await fetch(SITE.booking.endpoint, { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify({ ...data, _subject: `Booking request: ${data.date} ${data.type}` }) });
+      if (!r.ok) throw new Error("bad status");
+      showSent(summary, true);
+    } catch (_) {
+      btn.disabled = false; btn.textContent = "Send booking request";
+      err.textContent = `Could not send right now. Email the request to ${SITE.booking.email} instead.`; err.hidden = false;
+    }
+    return;
+  }
+  // No endpoint configured: hand off to the viewer's email app and show the message for copying.
+  const mailto = `mailto:${SITE.booking.email}?subject=${encodeURIComponent(`Booking request: ${data.date} ${data.type}`)}&body=${encodeURIComponent(summary)}`;
+  showSent(summary, false, mailto);
+});
+function showSent(summary, sent, mailto) {
+  $("#form-wrap").innerHTML = `<div class="status ok">
+    <p class="eyebrow">${sent ? "Request sent" : "Request ready"}</p>
+    <h3>${sent ? "Got it. Expect a reply within two days." : "One more step: send it from your email."}</h3>
+    ${sent ? "" : `<p class="muted">Your email app should open with everything filled in. If it does not, copy the request below and send it to <strong>${esc(SITE.booking.email)}</strong>.</p>`}
+    <pre id="summary">${esc(summary)}</pre>
+    <div class="email-row">
+      ${mailto ? `<a class="btn primary" href="${esc(mailto)}" id="mail-link">Open email app</a>` : ""}
+      <button class="btn" type="button" id="copy-summary">Copy request</button>
+      <button class="btn" type="button" id="copy-addr">Copy address</button>
+    </div>
+  </div>`;
+  $("#copy-summary").addEventListener("click", () => copyText(summary).then((ok) => toast(ok ? "Request copied" : "Select the text to copy it")));
+  $("#copy-addr").addEventListener("click", () => copyText(SITE.booking.email).then((ok) => toast(ok ? "Email copied" : "Select the address to copy it")));
+  if (mailto) { const a = $("#mail-link"); setTimeout(() => a.click(), 150); }
+  $("#form-wrap").scrollIntoView({ behavior: "smooth", block: "center" });
+}
+</script>
+</body>
+</html>

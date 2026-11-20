@@ -7,13 +7,27 @@ import { WaveIcon } from './Brand.jsx';
  *
  * aspect: '4/5' | '16/9' | '1/1' etc.  tone: 'copper' | 'cream'
  */
-export default function Placeholder({ src, alt = '', label, aspect = '4/5', tone = 'copper', className = '' }) {
+export default function Placeholder({
+  src,
+  alt = '',
+  label,
+  aspect = '4/5',
+  tone = 'copper',
+  className = '',
+  priority = false, // true for above-the-fold images (the hero)
+}) {
   const style = { aspectRatio: aspect };
 
   if (src) {
     return (
       <div className={`media ${className}`} style={style}>
-        <img src={src} alt={alt} loading="lazy" />
+        <img
+          src={src}
+          alt={alt}
+          loading={priority ? 'eager' : 'lazy'}
+          fetchpriority={priority ? 'high' : undefined}
+          decoding="async"
+        />
       </div>
     );
   }

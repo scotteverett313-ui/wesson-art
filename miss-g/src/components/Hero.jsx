@@ -40,6 +40,7 @@ export default function Hero({ ready = true }) {
             label={site.hero.image.label}
             aspect="16/9"
             tone="copper"
+            priority
           />
         </motion.div>
       </div>

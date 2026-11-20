@@ -23,7 +23,7 @@ export const site = {
     tagline: 'Braids and curls that look good and feel good.',
     ctaLabel: 'Request an Appointment',
     // Wide image (16:9). Set src to a photo path to replace the placeholder.
-    image: { src: null, alt: 'Miss G styling a client', label: 'Hero photo (16:9)' },
+    image: { src: '/images/hero.jpg', alt: 'Braided high bun with feed-in cornrows', label: 'Hero photo (16:9)' },
   },
 
   // ---- SERVICES ---------------------------------------------------
@@ -56,14 +56,17 @@ export const site = {
   ],
 
   // ---- GALLERY ----------------------------------------------------
-  // All gallery images are 4:5 (portrait). Add or remove items freely.
+  // All gallery images are 4:5 (portrait), 1080 x 1350. Add or remove items freely.
+  // An uneven last row is centered automatically.
   gallery: [
-    { src: null, alt: 'Knotless braids, side view', label: 'Gallery 1' },
-    { src: null, alt: 'Cornrows, back view', label: 'Gallery 2' },
-    { src: null, alt: 'Silk press, finished look', label: 'Gallery 3' },
-    { src: null, alt: 'Defined curls after wash and style', label: 'Gallery 4' },
-    { src: null, alt: 'Braided updo', label: 'Gallery 5' },
-    { src: null, alt: 'Client in the chair', label: 'Gallery 6' },
+    { src: '/images/gallery-1.jpg', alt: 'Cornrows with a criss-cross design, top view', label: 'Gallery 1' },
+    { src: '/images/gallery-2.jpg', alt: 'Short curled style with soft, defined curls', label: 'Gallery 2' },
+    { src: '/images/gallery-3.jpg', alt: 'Side-swept stitch braids, top view', label: 'Gallery 3' },
+    { src: '/images/gallery-4.jpg', alt: 'Honey blonde silk press with layered ends', label: 'Gallery 4' },
+    { src: '/images/gallery-5.jpg', alt: 'Pinned-up curls with highlights, back view', label: 'Gallery 5' },
+    { src: '/images/gallery-6.jpg', alt: 'Straight-back cornrows with a braided tail', label: 'Gallery 6' },
+    { src: '/images/gallery-7.jpg', alt: 'Voluminous curled updo, back view', label: 'Gallery 7' },
+    { src: '/images/gallery-8.jpg', alt: 'Curled bob, back view', label: 'Gallery 8' },
   ],
 
   // ---- ABOUT ------------------------------------------------------
@@ -74,7 +77,11 @@ export const site = {
       'Second paragraph placeholder: her approach to healthy hair, what she specializes in, and why clients keep coming back.',
     ],
     // Portrait photo (4:5).
-    photo: { src: null, alt: 'Portrait of Miss G', label: 'About photo (4:5)' },
+    photo: {
+      src: '/images/about.jpg',
+      alt: 'Illustrated portrait of Miss G holding a spray bottle and blow dryer',
+      label: 'About photo (4:5)',
+    },
   },
 
   // ---- BOOKING FORM -----------------------------------------------

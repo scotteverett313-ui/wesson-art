@@ -2,7 +2,7 @@
 
 One-page booking site for a Detroit-area braids & curls stylist. An SE|Design Studio pilot.
 
-**Stack:** Vite + React 18, Framer Motion (subtle fade/slide only), plain CSS. Deploys as a static site on Vercel.
+**Stack:** Vite + React 18, GSAP + ScrollTrigger (scroll and ambient motion), Framer Motion (section fade-ins and splash), plain CSS. Deploys as a static site on Vercel.
 
 ## Run it
 
@@ -25,6 +25,22 @@ Everything a client sees lives in **`src/data/site.js`**: tagline, services (nam
 3. Keep the aspect ratios: gallery and about photos are **4:5** (portrait, e.g. 1080×1350). The hero image is **16:9** (e.g. 1600×900). Images are cropped to fit with `object-fit: cover`, so slightly-off ratios are fine.
 
 While `src` is `null`, the `Placeholder` component shows a branded tile (wave icon + label) at the final size, so the layout does not shift when real photos land.
+
+## Animations
+
+All GSAP animations live next to the component they belong to and run through `motionOK()` in `src/lib/gsap.js`. Visitors whose device is set to reduce motion get a still, fully visible page.
+
+| Where | What it does |
+| --- | --- |
+| Splash | Wave symbol fades in, then out (Framer Motion). Once per visit. |
+| Hero wordmark | Wipes on left to right after the splash. |
+| Hero shapes | Blobs slowly drift and rotate; flowing lines sway; both parallax on scroll. |
+| Hero photo | Drifts gently inside its frame as the page scrolls. |
+| Service band | Endless scroll of service names under the hero. Slows on hover. Built from `site.services`. |
+| Header | Frosts and gains a shadow after scrolling 80px. |
+| Section accents | Script words ("the menu", "recent work"…) rise in letter by letter. |
+| Prices | Count up from 0 when the cards scroll into view. Screen readers get the final price. |
+| Gallery and about photos | Start slightly zoomed in and settle as they scroll into view. |
 
 ## Booking form (Formspree)
 

@@ -292,6 +292,22 @@ body.splash-open {
   background: var(--deep);
   color: var(--cream);
   border-bottom: 1px solid rgba(221, 197, 163, 0.18);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+/* Toggled by GSAP ScrollTrigger once the page is scrolled. */
+.header.is-scrolled {
+  background: rgba(41, 30, 38, 0.92);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-bottom-color: transparent;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+}
+.header__wordmark {
+  transform-origin: left center;
+  transition: transform 0.3s ease;
+}
+.header.is-scrolled .header__wordmark {
+  transform: scale(0.88);
 }
 .header__inner {
   height: var(--header-h);
@@ -362,6 +378,9 @@ body.splash-open {
 .section--dark .section-heading__accent,
 .section--plum .section-heading__accent {
   color: var(--copper); /* 4.2:1 at 32px passes large-text AA */
+}
+.section-heading__char {
+  display: inline-block; /* lets GSAP move each letter */
 }
 .section-heading__title {
   font-size: clamp(1.75rem, 1.3rem + 2vw, 2.5rem);
@@ -438,6 +457,53 @@ body.splash-open {
   }
 }
 
+/* --- Marquee band (bottom of hero) ------------------------------------ */
+.marquee {
+  position: relative;
+  z-index: 1;
+  margin-top: 2.75rem;
+  overflow: hidden;
+  border-block: 1px solid rgba(221, 197, 163, 0.22);
+  padding-block: 0.9rem;
+  color: var(--cream);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.marquee__track {
+  display: flex;
+  width: max-content;
+}
+.marquee__half {
+  display: flex;
+  flex-shrink: 0;
+}
+.marquee__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.75rem;
+  padding-right: 1.75rem;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.marquee__icon {
+  height: 1.35em;
+  color: var(--copper);
+}
+@media (min-width: 768px) {
+  .marquee {
+    margin-top: 4rem;
+    padding-block: 1.1rem;
+  }
+  .marquee__item {
+    font-size: 1.125rem;
+    gap: 2.25rem;
+    padding-right: 2.25rem;
+  }
+}
+
 /* --- Media / placeholder ---------------------------------------------- */
 .media {
   width: 100%;
@@ -451,6 +517,7 @@ body.splash-open {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  will-change: transform; /* GSAP zoom and parallax */
 }
 .placeholder {
   position: relative;

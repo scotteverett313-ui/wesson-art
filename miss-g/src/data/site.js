@@ -27,31 +27,33 @@ export const site = {
   },
 
   // ---- SERVICES ---------------------------------------------------
-  // `name` is also used in the booking form dropdown.
+  // `name` is also used in the booking form dropdown and the scrolling band in the hero.
   services: [
+    // SAMPLE PRICES AND TIMES — replace with Miss G's real numbers.
+    // `priceFrom` as a plain number (e.g. 180) gets the count-up animation.
     {
       name: 'Knotless Braids',
       description: 'Lightweight, tension-free braids that lay flat and last.',
-      priceFrom: '[X]',
-      duration: '[X] hrs',
+      priceFrom: 180,
+      duration: '4–6 hrs',
     },
     {
       name: 'Cornrows',
       description: 'Clean, even rows in straight-back or custom patterns.',
-      priceFrom: '[X]',
-      duration: '[X] hrs',
+      priceFrom: 75,
+      duration: '1.5–3 hrs',
     },
     {
       name: 'Silk Press',
       description: 'Smooth, bouncy, heat-protected press with movement.',
-      priceFrom: '[X]',
-      duration: '[X] hrs',
+      priceFrom: 85,
+      duration: '2 hrs',
     },
     {
       name: 'Curl Wash & Style',
       description: 'Cleanse, deep condition and define your natural curl.',
-      priceFrom: '[X]',
-      duration: '[X] hrs',
+      priceFrom: 65,
+      duration: '1.5 hrs',
     },
   ],
 

@@ -1,13 +1,17 @@
+import { useRef } from 'react';
 import { site } from '../data/site.js';
 import SectionHeading from './SectionHeading.jsx';
 import Reveal from './Reveal.jsx';
 import Placeholder from './Placeholder.jsx';
+import { useScrollZoom } from '../lib/useScrollZoom.js';
 import { EdgeWave, Blob } from './Decor.jsx';
 
 export default function Gallery() {
   const { accent, title } = site.sections.gallery;
+  const ref = useRef(null);
+  useScrollZoom(ref);
   return (
-    <section id="gallery" className="section section--plum section--edged section--grain" aria-labelledby="gallery-title">
+    <section id="gallery" ref={ref} className="section section--plum section--edged section--grain" aria-labelledby="gallery-title">
       <EdgeWave color="var(--cream)" flip />
       <Blob variant={2} className="gallery__blob" />
       <div className="container">

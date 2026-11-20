@@ -3,6 +3,7 @@ import { site } from '../data/site.js';
 import SectionHeading from './SectionHeading.jsx';
 import Reveal from './Reveal.jsx';
 import { compressImage } from '../lib/compressImage.js';
+import { EdgeWave, Blob } from './Decor.jsx';
 
 const ENDPOINT = import.meta.env.VITE_FORM_ENDPOINT;
 const MAX_PHOTO_BYTES = 2 * 1024 * 1024;
@@ -172,7 +173,9 @@ export default function BookingForm() {
 
   if (status === 'success') {
     return (
-      <section id="book" className="section section--dark" aria-labelledby="booking-title">
+      <section id="book" className="section section--dark section--edged section--grain" aria-labelledby="booking-title">
+        <EdgeWave color="var(--cream)" flip />
+        <Blob variant={1} className="booking__blob" />
         <div className="container booking">
           <SectionHeading accent={accent} title={title} id="booking-title" />
           <div className="form-card form-card--success" role="status" tabIndex={-1} ref={successRef}>
@@ -185,7 +188,9 @@ export default function BookingForm() {
   }
 
   return (
-    <section id="book" className="section section--dark" aria-labelledby="booking-title">
+    <section id="book" className="section section--dark section--edged section--grain" aria-labelledby="booking-title">
+      <EdgeWave color="var(--cream)" flip />
+      <Blob variant={1} className="booking__blob" />
       <div className="container booking">
         <SectionHeading accent={accent} title={title} id="booking-title" />
         <Reveal as="p" className="section-intro section-intro--on-dark">

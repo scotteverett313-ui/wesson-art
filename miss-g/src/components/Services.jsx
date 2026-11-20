@@ -1,11 +1,13 @@
 import { site } from '../data/site.js';
 import SectionHeading from './SectionHeading.jsx';
 import Reveal from './Reveal.jsx';
+import { EdgeWave } from './Decor.jsx';
 
 export default function Services() {
   const { accent, title } = site.sections.services;
   return (
-    <section id="services" className="section section--cream" aria-labelledby="services-title">
+    <section id="services" className="section section--cream section--edged" aria-labelledby="services-title">
+      <EdgeWave color="var(--plum)" />
       <div className="container">
         <SectionHeading accent={accent} title={title} id="services-title" />
         <ul className="services" role="list">

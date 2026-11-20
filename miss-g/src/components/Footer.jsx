@@ -1,5 +1,5 @@
 import { site } from '../data/site.js';
-import { WaveIcon, Wordmark } from './Brand.jsx';
+import { Wordmark } from './Brand.jsx';
 
 export default function Footer() {
   const { contact, credit } = site;
@@ -8,7 +8,6 @@ export default function Footer() {
     <footer className="footer">
       <div className="container footer__inner">
         <div className="footer__brand">
-          <WaveIcon className="footer__icon" />
           <Wordmark className="footer__wordmark" />
         </div>
         <address className="footer__contact">

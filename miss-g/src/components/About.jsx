@@ -2,11 +2,14 @@ import { site } from '../data/site.js';
 import SectionHeading from './SectionHeading.jsx';
 import Reveal from './Reveal.jsx';
 import Placeholder from './Placeholder.jsx';
+import { EdgeWave, WaveLines } from './Decor.jsx';
 
 export default function About() {
   const { accent, title } = site.sections.about;
   return (
-    <section id="about" className="section section--cream" aria-labelledby="about-title">
+    <section id="about" className="section section--cream section--edged" aria-labelledby="about-title">
+      <EdgeWave color="var(--plum)" />
+      <WaveLines className="about__lines" />
       <div className="container about">
         <Reveal className="about__photo">
           <Placeholder

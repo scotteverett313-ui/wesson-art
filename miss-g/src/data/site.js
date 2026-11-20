@@ -13,6 +13,10 @@ export const site = {
   name: 'Miss G Curls & Braids',
   shortName: 'Miss G',
 
+  // ---- SPLASH SCREEN ----------------------------------------------
+  // Wave symbol shown once per visit before the page. Set enabled: false to remove.
+  splash: { enabled: true, durationMs: 1800 },
+
   // ---- HERO -------------------------------------------------------
   hero: {
     // One line. Keep it short so it fits on a phone screen.

@@ -150,6 +150,85 @@ a {
   gap: 1rem;
 }
 
+/* --- Splash screen (wave symbol only, once per visit) ------------------ */
+.splash {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  background: var(--deep);
+  color: var(--cream);
+  cursor: pointer;
+}
+.splash__icon {
+  height: clamp(150px, 32vh, 260px);
+}
+body.splash-open {
+  overflow: hidden;
+}
+
+/* --- Natural shapes & textures ---------------------------------------- */
+.shape {
+  position: absolute;
+  display: block;
+  pointer-events: none;
+  background-color: currentColor;
+  -webkit-mask: var(--mask) center / contain no-repeat;
+  mask: var(--mask) center / contain no-repeat;
+}
+.shape--blob-1 {
+  --mask: url('/shapes/blob-1.svg');
+  aspect-ratio: 1;
+}
+.shape--blob-2 {
+  --mask: url('/shapes/blob-2.svg');
+  aspect-ratio: 1;
+}
+.shape--wave-lines {
+  --mask: url('/shapes/wave-lines.svg');
+  aspect-ratio: 800 / 320;
+}
+
+/* Wavy band at the top of a section, painted in the previous section's color. */
+.edge-wave {
+  position: absolute;
+  top: -1px;
+  left: 0;
+  width: 100%;
+  height: 44px;
+  pointer-events: none;
+  background-color: currentColor;
+  -webkit-mask: url('/shapes/edge-wave.svg') center / 100% 100% no-repeat;
+  mask: url('/shapes/edge-wave.svg') center / 100% 100% no-repeat;
+  transform: scaleY(-1);
+}
+.edge-wave--flip {
+  transform: scale(-1, -1);
+}
+.section--edged {
+  padding-top: calc(3.5rem + 44px);
+}
+@media (min-width: 768px) {
+  .edge-wave {
+    height: 72px;
+  }
+  .section--edged {
+    padding-top: calc(5.5rem + 72px);
+  }
+}
+
+/* Fine grain on dark sections. Very low opacity so text contrast is unchanged. */
+.section--grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: url('/shapes/grain.svg');
+  opacity: 0.07;
+  mix-blend-mode: overlay;
+}
+
 /* --- Buttons ----------------------------------------------------------- */
 .btn {
   display: inline-flex;
@@ -229,18 +308,12 @@ a {
   text-decoration: none;
   border-radius: var(--radius-sm);
 }
-.header__icon {
+.header__wordmark {
   height: 34px;
 }
-.header__wordmark {
-  height: 30px;
-}
 @media (min-width: 768px) {
-  .header__icon {
-    height: 40px;
-  }
   .header__wordmark {
-    height: 36px;
+    height: 40px;
   }
 }
 
@@ -252,6 +325,14 @@ a {
   .section {
     padding-block: 5.5rem;
   }
+}
+.section {
+  position: relative;
+  overflow: hidden; /* shapes bleed off the edges */
+}
+.section > .container {
+  position: relative;
+  z-index: 1; /* content always above shapes and grain */
 }
 .section--dark {
   background: var(--deep);
@@ -304,14 +385,32 @@ a {
   text-align: center;
   gap: 1.25rem;
 }
-.hero__logo {
+.hero__wordmark {
+  width: min(300px, 82vw);
   color: var(--cream);
 }
-.logo-lockup__icon {
-  height: 110px;
+.hero__blob {
+  color: var(--copper);
 }
-.logo-lockup__wordmark {
-  width: min(260px, 80vw);
+.hero__blob--1 {
+  width: min(70vw, 560px);
+  top: -6%;
+  right: -22%;
+  opacity: 0.16;
+}
+.hero__blob--2 {
+  width: min(48vw, 380px);
+  bottom: 4%;
+  left: -18%;
+  color: var(--cream);
+  opacity: 0.07;
+}
+.hero__lines {
+  width: min(80vw, 640px);
+  left: -16%;
+  top: 30%;
+  color: var(--cream);
+  opacity: 0.1;
 }
 .hero__tagline {
   font-size: clamp(1.5rem, 1.1rem + 2.2vw, 2.25rem);
@@ -330,11 +429,12 @@ a {
   .hero {
     padding-top: 4rem;
   }
-  .logo-lockup__icon {
-    height: 140px;
+  .hero__wordmark {
+    width: 400px;
   }
-  .logo-lockup__wordmark {
-    width: 340px;
+  .hero__lines {
+    left: -8%;
+    top: 22%;
   }
 }
 
@@ -417,13 +517,20 @@ a {
 }
 .service-card__meta {
   margin: 0.25rem 0 0;
-  display: flex;
-  gap: 1.5rem;
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: start;
+  column-gap: 1.5rem;
+  align-items: baseline; /* labels share a row, values share a baseline */
 }
 .service-card__meta div {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end; /* price and time sit on the same baseline */
+  display: contents;
+}
+.service-card__meta dt {
+  grid-row: 1;
+}
+.service-card__meta dd {
+  grid-row: 2;
 }
 .service-card__meta dt {
   font-size: 0.8125rem;
@@ -461,6 +568,13 @@ a {
     gap: 1.25rem;
   }
 }
+.gallery__blob {
+  width: min(60vw, 520px);
+  top: -4%;
+  right: -24%; /* kept away from the heading so its contrast stays intact */
+  color: var(--copper);
+  opacity: 0.12;
+}
 .gallery__more {
   margin-top: 1.75rem;
   text-align: center;
@@ -475,6 +589,13 @@ a {
 }
 
 /* --- About ------------------------------------------------------------- */
+.about__lines {
+  width: min(70vw, 560px);
+  right: -18%;
+  top: 1%;
+  color: var(--copper);
+  opacity: 0.28;
+}
 .about {
   display: grid;
   gap: 2rem;
@@ -497,6 +618,13 @@ a {
 }
 
 /* --- Booking form ------------------------------------------------------ */
+.booking__blob {
+  width: min(64vw, 560px);
+  bottom: -12%;
+  right: -22%;
+  color: var(--copper);
+  opacity: 0.14;
+}
 .booking {
   max-width: calc(640px + 2 * var(--gutter)); /* keep heading, intro and card aligned */
 }
@@ -681,11 +809,8 @@ a {
   gap: 0.75rem;
   color: var(--cream);
 }
-.footer__icon {
-  height: 44px;
-}
 .footer__wordmark {
-  height: 40px;
+  height: 48px;
 }
 .footer__contact {
   font-style: normal;

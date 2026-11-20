@@ -2,11 +2,14 @@ import { site } from '../data/site.js';
 import SectionHeading from './SectionHeading.jsx';
 import Reveal from './Reveal.jsx';
 import Placeholder from './Placeholder.jsx';
+import { EdgeWave, Blob } from './Decor.jsx';
 
 export default function Gallery() {
   const { accent, title } = site.sections.gallery;
   return (
-    <section id="gallery" className="section section--plum" aria-labelledby="gallery-title">
+    <section id="gallery" className="section section--plum section--edged section--grain" aria-labelledby="gallery-title">
+      <EdgeWave color="var(--cream)" flip />
+      <Blob variant={2} className="gallery__blob" />
       <div className="container">
         <SectionHeading accent={accent} title={title} id="gallery-title" />
         <ul className="gallery" role="list">
